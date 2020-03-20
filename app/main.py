@@ -61,7 +61,7 @@ def login():
 def ledcheck(led,status):
     '''this function check that we send right data for controling status led light bars or not'''
     ret = False
-    leds = ['ledred' , 'ledyellow' , 'ledwhite']
+    leds = ['ledred' , 'ledyellow' , 'ledwhite','all']
     statuss = ['on' , 'off']
     if led in leds and status in statuss:
         ret = True
@@ -77,4 +77,4 @@ def relaycheck(relaypin, status):
         ret = True
         
     return ret
-    
+ledcontrol("ledred","off")

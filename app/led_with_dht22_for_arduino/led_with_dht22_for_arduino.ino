@@ -14,8 +14,8 @@
 #define DHTTYPE DHT22                   // DHT 22 (AM2302), AM2321
 
 uint8_t ledy = D1;                      // yellow led conected to the (D1)
-uint8_t pirSensor = D0;                 // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
-uint8_t relayInput = D2;                // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
+uint8_t pirSensor = D2;                 // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
+uint8_t relayInput = D0;                // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
 
 DHT dht(DHTPin, DHTTYPE);               // Initialize DHT sensor.       
 
@@ -37,6 +37,7 @@ String URL;
 String payload;
 String ID;
 String state;
+String msg;
 
 //======================== variable for for storing diferent stuff statuss ===========================
 String statusre = "off";
@@ -48,6 +49,7 @@ String statusr = "off";
 String statusy = "off";
 String statusw = "off";
 String statusrelay = "off";
+String allleds = "off";
 
 // Set up the server object
 ESP8266WebServer server(80);            // start server at 10.10.10.1 IP at port : 80
@@ -56,6 +58,7 @@ HTTPClient http;                        // start http client and server object
 //========== Check if header is present and correct and client is authentified or no ==================
 
 bool is_authentified() {
+  
   Serial.println("Enter is authentified");
   if (server.hasHeader("Cookie")) {
     Serial.print("Found cookie: ");
@@ -66,6 +69,7 @@ bool is_authentified() {
       return true;
     }
   }
+  
   Serial.println("Authentification Failed");
   return false;
 }
@@ -115,6 +119,7 @@ void setup() {
   // route for checking server is running or not and this handle client route dont need login 
   server.on("/inline", []() {
     server.send(200, "text/plain", "this works without need of authentification");
+    Serial.println("device work properly");
   });
   
   //here the list of headers to be recorded
@@ -133,12 +138,14 @@ void setup() {
 void loop() {
 
   server.handleClient();                                  // make server to handle all requests comeing from the clients
-  read_pir_Sensor();                                      // read pir sensor status 
+  read_pir_Sensor();                                      // read pir sensor status
+   
 }
 
 void handlecontrolrelay(){
   /* this function handle controlling 3 status led for showing pysically all results and dont need login */ 
-  
+
+  Serial.println("Enter handle control relay");                      // monitoring for start this route
   statusrelay = server.arg("relay1");                                   // getting the values that given to relay1 via http requst that come from client
 
   // start checking that must turn on relay or not
@@ -160,11 +167,13 @@ void handlecontrolrelay(){
   String json_relay_status_String = JSON.stringify(relay_status_Array);      // make final json file on to strig and prepairing for send
   
   server.send(200, "text/html", json_relay_status_String);                   // send response to requests comming for this route accros to made json array
+  Serial.println("sending the response for handle control relay");                                        // monitoring for response to this route
 }
 
 void handle_read_pir_data() {
   /* this function handle reading pir status and send respons for client that ask for this route and dont need login */
 
+  Serial.println("Enter handle read pir data");                                         // monitoring for start this route
   Serial.println("string value of pir sensor is:"+status_pir);                // monitoring pir status that is detect human motion or not 
   
   JSONVar pir_status_Array;                                                   // make json array for sendeng pir status via json type
@@ -174,18 +183,20 @@ void handle_read_pir_data() {
   String json_pir_status_String = JSON.stringify(pir_status_Array);           // make final json file on to strig and prepairing for send
   
   server.send(200, "text/html", json_pir_status_String);                      // send response to requests comming for this route accros to made json array
+  Serial.println("sending response for handle read pir data");                // monitoring for response to this route
   
 }
 
 void read_pir_Sensor() {
   /* this function start reading pir sensor status and store them into variables */  
-
+  
   pirsensorValue = digitalRead(pirSensor);                  // read the pir sensor value on/off[]
 
   // start storing datas from declare pir status  
   if (pirsensorValue == 1){
       status_pir = "yes";
   }
+  
   else{
       status_pir = "no";  
   }
@@ -238,15 +249,18 @@ void handleroot() {
   // make button for disconnecting from server and after it login again
   content += "You can access this page until you <a href=\"/login?DISCONNECT=YES\">disconnect</a></body></html>";
   server.send(200, "text/html", content);                   // sending response for clients that send request for this route
+  Serial.println("sending response for handle root request");                      // monitoring for response to this route
 }
 
 void handlecontrolled(){
   /* this function handle controlling status leds bars via client requests and dont need login */
-  
+
+  Serial.println("Enter handle control leds");                      // monitoring for start this route
   statusr = server.arg("ledred");                     // getting the values that given to red led via http requst that come from client
   statusy = server.arg("ledyellow");                  // getting the values that given to yellow led via http requst that come from client
   statusw = server.arg("ledwhite");                   // getting the values that given to white led via http requst that come from client
-
+  allleds = server.arg("all");                        // getting the values that given to white led via http requst that come from client
+  
   // start checking wich led must turn on or not via get variable that collected from client request   
   if (statusr == "on"){
     digitalWrite(ledr,LOW);
@@ -276,9 +290,29 @@ void handlecontrolled(){
   if (statusw == "off"){
     digitalWrite(ledw,HIGH);
     statuswe = "off";  
+  }
+  
+  if (allleds == "on"){
+    digitalWrite(ledw,LOW);
+    digitalWrite(ledr,LOW);
+    digitalWrite(ledy,LOW);
+    statuswe = "on";
+    statusye = "on";
+    statusre = "on";                  
+  }
+  
+  if (allleds == "off"){
+    digitalWrite(ledw,HIGH);
+    digitalWrite(ledr,HIGH);
+    digitalWrite(ledy,HIGH);
+    statuswe = "off";
+    statusye = "off";
+    statusre = "off";                  
   }  
   // end checking wich led must turn on or not via get variable that collected from client request
 
+  Serial.println("start makeing leds on and of across to the post methed comeing from client");                      // monitoring for leds statuss
+  
   JSONVar led_status_Array;                                                 // make json array for sendeng leds status via json type
   
   led_status_Array["redled"] = statusre;                                    // adding wanted value to made json array
@@ -288,80 +322,107 @@ void handlecontrolled(){
   String json_led_status_String = JSON.stringify(led_status_Array);         // make final json file on to strig and prepairing for send
   
   server.send(200, "text/html", json_led_status_String);                    // send response to requests comming for this route accros to made json array
+  Serial.println("sendeing response for handle control leds by json");                      // monitoring for response to this route
 
 }
 
 void handle_read_room_d_data(){
   /* this function handle read temperature and humadity dynamic datas that stored in other parts of this sketch and dont need login */
 
-  Serial.println("Enter handle_read_room_d_data");    
-  readSensor();
+  Serial.println("Enter handle_read_room_d_data");                                                // monitoring for start this route
+  Serial.println("start reading dht22 sensor values");                                            // start reading dht22 sensor status
   
-  JSONVar room_status_Array;
+  readSensor();                                                                                   // reading DHT22 sensor temperarture and humadity values
   
-  room_status_Array["temperature"] = Temperature;
-  room_status_Array["humadity"] = Humidity;
+  JSONVar room_status_Array;                                                                      // make json array for sendeng leds status via json type
+  
+  room_status_Array["temperature"] = Temperature;                                                 // adding wanted value to made json array
+  room_status_Array["humadity"] = Humidity;                                                       // adding wanted value to made json array
 
-  String json_room_status_String = JSON.stringify(room_status_Array);
+  String json_room_status_String = JSON.stringify(room_status_Array);                             // make final json file on to strig and prepairing for send
   
-  server.send(200, "text/html", json_room_status_String);
+  server.send(200, "text/html", json_room_status_String);                                         // send response to requests comming for this route accros to made json array
+  Serial.println("sending response for handle read romm dynamic datas");                          // monitoring for response to this route
 
 }
 
-void readSensor()
-{
-  delay(1000);  
-  Temperature = dht.readTemperature(); // Gets the values of the temperature
-  Humidity = dht.readHumidity(); // Gets the values of the humidity
+void readSensor(){
+  /* this function read dht22 datas from real world and store them into variable */
   
+  delay(1000);                                                                  // wait 1 secound beacuse of delay of sht22 sensor
+  Temperature = dht.readTemperature();                                          // Gets the values of the temperature
+  Humidity = dht.readHumidity();                                                // Gets the values of the humidity
+
+  // start checking that sensor is connected or work well if not monitoring it
   if (isnan(Temperature) || isnan(Humidity)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
+    Serial.println(F("Failed to read from DHT sensor!"));                       // monitoring that dht22 is not connected or have problem if check dht22 sensor become feult
     return;
   }
+  // end checking that sensor is connected or work well if not monitoring it
   
-  Serial.println("room temperature is : "+String(Temperature));
-  Serial.println("room humadity is : "+String(Humidity));
+  Serial.println("room temperature is : "+String(Temperature));                 // monitoring dht22 temperature
+  Serial.println("room humadity is : "+String(Humidity));                       // monitoring dht22 temperature
+  Serial.println("End reading datas from the dht22 sensor");                    // monitoring for start this route
+
 }
 
-//login page, also called for disconnect
+//login page, and also sometime trigerd for requests comeing for disconnect from the server
 void handlelogin() {
-  String msg;
+  /* this funstion handle login page and send username and pass that collected from the page to server and validate it if atuntication was true enter to main page if not pass */
+
+  Serial.println("Enter handlelogin");                      // monitoring for start this route
+  // start checking that person atunticate truely from takeing system cookies from the comeing computer and if you login it set your cookies and save them for next time
   if (server.hasHeader("Cookie")) {
     Serial.print("Found cookie: ");
     String cookie = server.header("Cookie");
     Serial.println(cookie);
   }
+  
   if (server.hasArg("DISCONNECT")) {
     Serial.println("Disconnection");
     server.sendHeader("Location", "/login");
     server.sendHeader("Cache-Control", "no-cache");
     server.sendHeader("Set-Cookie", "ESPSESSIONID=0");
     server.send(301);
+    
     return;
   }
+  // end checking that person atunticate truely from takeing system cookies from the comeing computer and if you login it set your cookies and save them for next time
+
+  Serial.println("start checking given pass and user");                      // monitoring for start checking given pass and user
+  
+  // start checking username and password that collected from the person if it was true set the cokies if not return login page again
   if (server.hasArg("USERNAME") && server.hasArg("PASSWORD")) {
     if (server.arg("USERNAME") == "mgmgst" &&  server.arg("PASSWORD") == "1051154731" ) // enter ur username and password you want
     {
       server.sendHeader("Location", "/");
       server.sendHeader("Cache-Control", "no-cache");
       server.sendHeader("Set-Cookie", "ESPSESSIONID=1");
-      server.send(301);
-      Serial.println("Log in Successful");
+      server.send(301);                                                                        // send http respons (301) code >> atuticate was true
+      Serial.println("Log in Successful");                                                     // if athuntication was true monitoring that login was successful
       return;
-
     }
-
-    msg = "<center><p>!!! Wrong username/password! try again. !!!</p></center>";
-    Serial.println("Log in Failed");
+    msg = "<center><p>!!! Wrong username/password! try again. !!!</p></center>";               // if login was failed send message to the html page as exact given message
+    Serial.println("Log in Failed");                                                           // monitoring that login was failed
   }
+  // end checking username and password that collected from the person if it was true set the cokies if not return login page again
+  
+  // start makeing response html page for sendeing response for requests comming from the client for the login route (ask)
   String content = "<html><body style='background-color:MediumAquaMarine'><form action='/login' method='POST'><p  align ='center' style='font-size:300%;'><u><b><i>  Log In  </i></b></u></p><br>";
   content += " <p   align ='center' style='font-size:160%'><b> UserName:<input type='text' name='USERNAME' placeholder='user name' required></b></p><br>";
   content += "<p  align ='center' style='font-size:160%'><b>Password:<input type='password' name='PASSWORD' placeholder='password' required></b></p><br>";
   content += "<p  align ='center' style='font-size:160%'><input type='submit' name='SUBMIT' value='Submit'></form>" + msg + "</p><br></body></html>";
-  server.send(200, "text/html", content);
+  // end makeing response html page for sendeing response for requests comming from the client for the login route (ask)
+  
+  server.send(200, "text/html", content);                                                      // sendeing the response for this route   
+  Serial.println("sending response for requsts to handle login");                              // monitoring for response to this route
 }
 
 void handleNotFound() {
+  /* this function handle 404 page if some one request or send somtheing that we dont need */
+
+  Serial.println("enter handlenotdount (404)");                              // monitoring for start this route
+  // start makeing response for sending to the requests comeing from the client
   String message = "File Not Found\n\n";
   message += "URI: ";
   message += server.uri();
@@ -370,8 +431,12 @@ void handleNotFound() {
   message += "\nArguments: ";
   message += server.args();
   message += "\n";
+  
   for (uint8_t i = 0; i < server.args(); i++) {
     message += " " + server.argName(i) + ": " + server.arg(i) + "\n";
   }
-  server.send(404, "text/plain", message);
+  // end makeing response for sending to the requests comeing from the client
+  
+  server.send(404, "text/plain", message);                                                       // sendeing the response for this route
+    Serial.println("sending response for requsts to handle not found page (404)");                              // monitoring for response to this route
 }
