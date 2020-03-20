@@ -23,7 +23,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] getting help from mr.hosseini and mr.khaderian
 - [ ] adding more professional persons to te project
 - [ ] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
-- [ ] make data sheet for all ellectrical part of the work
+- [ ] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [ ] coninue makeing the electrical parts
 - [ ] engining the all work and make the main pattern for all work
 - [ ] makeing graphical pattern for done the project
@@ -36,8 +36,10 @@ This project is in way for writing assay for top sobject.
 
 - پایتون
 - فلسک
-- آردیونو
+- هسته وای فای esp8266
 - مای اسکوئل
+- الکترونیک
+- میکروکنترلر ها و میکرو پرسسور ها
 
 کل ویدئوها رو می تونین از لینک های زیر ببینین.
 </div>
@@ -45,7 +47,7 @@ This project is in way for writing assay for top sobject.
 Every single step of this project is screen captures and you can follow them [On Aparat](https://www.aparat.com/assaysohil). 
 
 ## How to run
-1. Install python3, pip3, virtualenv, MySQL in your system.
+1. Install python3, pip3, virtualenv, arduino+complete(librarys and bourds), MySQL in your system.
 2. Clone the project `git clone https://github.com/mgmgst/labratory_mouse_home.git && cd labratory_mouse_home`
 5. Create a virtualenv named venv using `virtualenv -p python3 venv`
 6. Connect to virtualenv using `source venv/bin/activate`
