@@ -9,17 +9,12 @@ authors : mohammad gharehbagh && sohil shoravarzi
 
 ## Todolist :
 - [x] make comment and introduction in both code sites
-- [ ] engining the all work and make the main pattern for all work
-- [ ] makeing graphical pattern for done the project
-- [ ] write readme.mi and make TODOS on it
-- [ ] add my sql service to it and sava all of data on it and write the help for this in readme.md
-- [ ] make data sheet for all ellectrical part of the work
-- [ ] coninue makeing the electrical parts
-- [ ] add this project on git 
-- [ ] add movies that record from this project on youtube.com site and write the adress in in readme.md
+- [x] write readme.mi and make TODOS on it
+- [x] add this project on git 
+- [x] make aparat link for project and add it to bottom aparat link
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
-- [ ] make graphical user interface for showing results and charts
+- [ ] make graphical user interface for showing results and charts desktop app or website web service
 - [ ] writeing assay for result of electromagnetic fields on human and live creaters
 - [ ] all works must be text and haveing some things from them
 - [ ] write the book for it
@@ -27,7 +22,12 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] send assay for ISI and so many other diferrent places
 - [ ] getting help from mr.hosseini and mr.khaderian
 - [ ] adding more professional persons to te project
-- [ ] make aparat link for project and add it to bottom aparat link
+- [ ] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
+- [ ] make data sheet for all ellectrical part of the work
+- [ ] coninue makeing the electrical parts
+- [ ] engining the all work and make the main pattern for all work
+- [ ] makeing graphical pattern for done the project
+- [ ] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and ...
 
 This project is in way for writing assay for top sobject. 
 

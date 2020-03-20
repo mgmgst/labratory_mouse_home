@@ -29,18 +29,20 @@ def ledcontrol(led,status):
         return redled, whiteled, yellowled
     
     else:
-        print('your givin elements is not true')
+        return 'your givin elements is not true'
 
 def relaycontrol(relaypin, status):
     '''this function can control relay [<exept for now can control relay1 that can control big panel light>] that control lights and power stuffs'''
     if relaycheck(relaypin,status):
         url = f'http://10.10.10.1/control_relay?{relaypin}={status}'
         respon = requests.get(url)
-        relay_status = respon.json()['relay_Status']
+        stuffs = {'light' : respon.json()['relay1_Status'],
+        'fan(in)' : respon.json()['relay2_Status'],
+        'fan(out)' : respon.json()['relay3_Status'],}
         
-        return relay_status
+        return stuffs
     else:
-        print('your givin elements is not true')
+        return 'your givin elements is not true'
 
 def logout():
     '''this function logout from server'''
@@ -70,11 +72,11 @@ def ledcheck(led,status):
 
 def relaycheck(relaypin, status):
     '''this function check that we send right data for controling [<exept for now can check relay1 that can control big panel light>] relays that they control power stuff or not'''
+    ''' in this function relay1 == light & relay2 == fan(in) & relay3 == fan(out) '''
     ret = False
-    relay = 'relay1'
+    relays = ['relay1', 'relay2', 'relay3']
     statuss = ['on', 'off']
-    if relaypin == relay and status in statuss:
+    if relaypin in relays and status in statuss:
         ret = True
         
     return ret
-ledcontrol("ledred","off")

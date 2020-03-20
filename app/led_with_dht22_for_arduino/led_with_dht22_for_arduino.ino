@@ -14,8 +14,10 @@
 #define DHTTYPE DHT22                   // DHT 22 (AM2302), AM2321
 
 uint8_t ledy = D1;                      // yellow led conected to the (D1)
-uint8_t pirSensor = D2;                 // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
-uint8_t relayInput = D0;                // TODO: connect this pins and devices to esp8266 and upload this sketch into it then make comment for it.
+uint8_t pirSensor = D2;                 // pir sensor conected to the (D2)
+uint8_t relayInput1 = D0;               // relay1 conected to the (D0)
+uint8_t relayInput2 = D3;               // relay2 conected to the (D3)
+uint8_t relayInput3 = D4;               // relay3 conected to the (D4)
 
 DHT dht(DHTPin, DHTTYPE);               // Initialize DHT sensor.       
 
@@ -43,12 +45,16 @@ String msg;
 String statusre = "off";
 String statusye = "off";
 String statuswe = "off";
-String statusrelaye = "off";
+String statusrelaye1 = "off";
+String statusrelaye2 = "off";
+String statusrelaye3 = "off";
 String status_pir = "no";
 String statusr = "off";
 String statusy = "off";
 String statusw = "off";
-String statusrelay = "off";
+String statusrelay1 = "off";
+String statusrelay2 = "off";
+String statusrelay3 = "off";
 String allleds = "off";
 
 // Set up the server object
@@ -90,8 +96,12 @@ void setup() {
   pinMode(ledr, OUTPUT);                  // start led red pin as output
   pinMode(ledw, OUTPUT);                  // start led white pin as output
   pinMode(ledy, OUTPUT);                  // start led yellow pin as output
-  pinMode(relayInput, OUTPUT);            // start relay1 pin as output
-  digitalWrite(relayInput, HIGH);         // turn off the relay1
+  pinMode(relayInput1, OUTPUT);           // start relay1 pin as output
+  pinMode(relayInput2, OUTPUT);           // start relay2 pin as output
+  pinMode(relayInput3, OUTPUT);           // start relay3 pin as output    
+  digitalWrite(relayInput1, HIGH);        // turn off the relay1
+  digitalWrite(relayInput2, HIGH);        // turn off the relay2
+  digitalWrite(relayInput3, HIGH);        // turn off the relay3    
   digitalWrite(ledr, HIGH);               // turn off the red led
   digitalWrite(ledw, HIGH);               // turn off the white led
   digitalWrite(ledy, HIGH);               // turn off the yellow led
@@ -145,28 +155,50 @@ void loop() {
 void handlecontrolrelay(){
   /* this function handle controlling 3 status led for showing pysically all results and dont need login */ 
 
-  Serial.println("Enter handle control relay");                      // monitoring for start this route
-  statusrelay = server.arg("relay1");                                   // getting the values that given to relay1 via http requst that come from client
+  Serial.println("Enter handle control relay");                          // monitoring for start this route
+  statusrelay1 = server.arg("relay1");                                   // getting the values that given to relay1 via http requst that come from client
+  statusrelay2 = server.arg("relay2");                                   // getting the values that given to relay1 via http requst that come from client
+  statusrelay3 = server.arg("relay3");                                   // getting the values that given to relay1 via http requst that come from client    
 
   // start checking that must turn on relay or not
-  if (statusrelay == "on"){
-    digitalWrite(relayInput,LOW);
-    statusrelaye = "on";
+  if (statusrelay1 == "on"){
+    digitalWrite(relayInput1,LOW);
+    statusrelaye1 = "on";
   }
   
-  if (statusrelay == "off"){
-    digitalWrite(relayInput,HIGH);
-    statusrelaye = "off";
+  if (statusrelay1 == "off"){
+    digitalWrite(relayInput1,HIGH);
+    statusrelaye1 = "off";
   }
+  if (statusrelay2 == "on"){
+    digitalWrite(relayInput2,LOW);
+    statusrelaye2 = "on";
+  }
+  
+  if (statusrelay2 == "off"){
+    digitalWrite(relayInput2,HIGH);
+    statusrelaye2 = "off";
+  }
+  if (statusrelay3 == "on"){
+    digitalWrite(relayInput3,LOW);
+    statusrelaye3 = "on";
+  }
+  
+  if (statusrelay3 == "off"){
+    digitalWrite(relayInput3,HIGH);
+    statusrelaye3 = "off";
+  }    
   // end checking that must turn on relay or not
 
-  JSONVar relay_status_Array;                                                // make json array for sendeng relay1 status via json type
+  JSONVar relays_status_Array;                                                // make json array for sendeng relay1 status via json type
   
-  relay_status_Array["relay_Status"] = statusrelaye;                         // adding values to made json array
-
-  String json_relay_status_String = JSON.stringify(relay_status_Array);      // make final json file on to strig and prepairing for send
+  relays_status_Array["relay1_Status"] = statusrelaye1;                         // adding values to made json array
+  relays_status_Array["relay2_Status"] = statusrelaye2;                         // adding values to made json array
+  relays_status_Array["relay3_Status"] = statusrelaye3;                         // adding values to made json array
+    
+  String json_relays_status_String = JSON.stringify(relays_status_Array);      // make final json file on to strig and prepairing for send
   
-  server.send(200, "text/html", json_relay_status_String);                   // send response to requests comming for this route accros to made json array
+  server.send(200, "text/html", json_relays_status_String);                   // send response to requests comming for this route accros to made json array
   Serial.println("sending the response for handle control relay");                                        // monitoring for response to this route
 }
 
@@ -232,8 +264,12 @@ void handleroot() {
   content +=  String(Temperature) + "</p>";                 // showing value of temperature after details
   content += "<br><p>room humadity is : ";                  // this is datail for showing humadity of the mouse room
   content +=  String(Humidity) + "</p>";                    // showing value of humadity after details
-  content += "<br><p>relay1  is : ";                        // this is datail for showing status of relay1
-  content +=  String(statusrelaye) + "</p>";                // showing relay1 status after details
+  content += "<br><p>light  is : ";                        // this is datail for showing status of relay1
+  content +=  String(statusrelaye1) + "</p>";                // showing relay1 status after details
+  content += "<br><p>fan(in)  is : ";                        // this is datail for showing status of relay1
+  content +=  String(statusrelaye2) + "</p>";                // showing relay1 status after details
+  content += "<br><p>fan(out) : ";                        // this is datail for showing status of relay1
+  content +=  String(statusrelaye3) + "</p>";                // showing relay1 status after details    
   content += "<br><p>human motion detect : ";               // this is datail for showing status of pir human motion detect
   content +=  String(status_pir) + "</p>";
   content += "<br><p><marquee direction='right'>Developed by ::  MOHAMMAD GHAREHBAGH ::</marquee></p>";            
