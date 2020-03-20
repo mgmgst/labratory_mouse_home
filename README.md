@@ -12,6 +12,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] write readme.mi and make TODOS on it
 - [x] add this project on git 
 - [x] make aparat link for project and add it to bottom aparat link
+- [x] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
@@ -22,12 +23,11 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] send assay for ISI and so many other diferrent places
 - [ ] getting help from mr.hosseini and mr.khaderian
 - [ ] adding more professional persons to te project
-- [ ] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
 - [ ] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [ ] coninue makeing the electrical parts
 - [ ] engining the all work and make the main pattern for all work
 - [ ] makeing graphical pattern for done the project
-- [ ] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and ...
+- [ ] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 
 This project is in way for writing assay for top sobject. 
 
@@ -54,3 +54,27 @@ Every single step of this project is screen captures and you can follow them [On
 7. From the project folder, install packages using `pip install -r requirements.txt`
 8. Now environment is ready. 
 9. تمام شما الان میتونید رو پروژه کار کنین
+
+### make mysql server for project
+
+1. run this comand in MYSQL database : `CREATE DATABASE alldatas;`
+
+2. run this comand in MYSQL database : `CREATE USER 'alldatas'@'localhost' IDENTIFIED BY 'test';`
+
+3. run this comand in MYSQL database : `GRANT ALL PRIVILEGES ON alldatas.* TO 'alldatas'@'localhost';`
+
+4. run this comand in MYSQL database : `DROP TABLE IF EXISTS ledstatus;`
+
+5. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE ledstatus (redled VARCHAR(30),whiteled VARCHAR(30) , yellowled VARCHAR(30) , timestamp  TIMESTAMP);`
+
+6. run this comand in MYSQL database : `DROP TABLE IF EXISTS relaystatus;`
+
+7. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE relaystatus (light VARCHAR(30),fanin VARCHAR(30) , fanout VARCHAR(30) , timestamp  TIMESTAMP);`
+
+8. run this comand in MYSQL database : `DROP TABLE IF EXISTS pirstatus;`
+
+9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE pirstatus (motion VARCHAR(30), timestamp  TIMESTAMP);`
+
+10. run this comand in MYSQL database : `DROP TABLE IF EXISTS dhtstatus;`
+
+11. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE dhtstatus (hum VARCHAR(30),temp VARCHAR(30) , timestamp  TIMESTAMP);`
