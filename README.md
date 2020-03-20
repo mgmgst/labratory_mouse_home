@@ -42,7 +42,7 @@ This project is in way for writing assay for top sobject.
 کل ویدئوها رو می تونین از لینک های زیر ببینین.
 </div>
 
-Every single step of this project is screen captures and you can follow them [On Aparat]("notheing to show because project start today"). 
+Every single step of this project is screen captures and you can follow them [On Aparat](https://www.aparat.com/assaysohil). 
 
 ## How to run
 1. Install python3, pip3, virtualenv, MySQL in your system.
