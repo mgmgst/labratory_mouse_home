@@ -56,7 +56,6 @@ Every single step of this project is screen captures and you can follow them [On
 9. تمام شما الان میتونید رو پروژه کار کنین
 
 ### make mysql server for project
-
 1. run this comand in MYSQL database : `CREATE DATABASE alldatas;`
 
 2. run this comand in MYSQL database : `CREATE USER 'alldatas'@'localhost' IDENTIFIED BY 'test';`
