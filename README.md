@@ -52,4 +52,5 @@ Every single step of this project is screen captures and you can follow them [On
 5. Create a virtualenv named venv using `virtualenv -p python3 venv`
 6. Connect to virtualenv using `source venv/bin/activate`
 7. From the project folder, install packages using `pip install -r requirements.txt`
-8. Now environment is ready. Run it by `python app/main.py`
+8. Now environment is ready. 
+9. تمام شما الان میتونید رو پروژه کار کنین
