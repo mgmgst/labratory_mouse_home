@@ -29,7 +29,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] makeing graphical pattern for done the project
 - [ ] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 
-This project is in way for writing assay for top sobject. 
+This project is in way for writing assay for top subject. 
 
 <div dir="rtl"> 
  در این پروژه از تکنولوژی های زیر استفاده می شه:
@@ -68,11 +68,15 @@ Every single step of this project is screen captures and you can follow them [On
 
 6. run this comand in MYSQL database : `DROP TABLE IF EXISTS relaystatus;`
 
-7. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE relaystatus (light VARCHAR(30),fanin VARCHAR(30) , fanout VARCHAR(30) , timestamp  TIMESTAMP);`
+7. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE relaystatus (light VARCHAR(30),fans VARCHAR(30) ,timestamp  TIMESTAMP);`
 
 8. run this comand in MYSQL database : `DROP TABLE IF EXISTS pirstatus;`
 
 9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE pirstatus (motion VARCHAR(30), timestamp  TIMESTAMP);`
+
+8. run this comand in MYSQL database : `DROP TABLE IF EXISTS irstatus;`
+
+9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE irstatus (switch VARCHAR(30), timestamp  TIMESTAMP);`
 
 10. run this comand in MYSQL database : `DROP TABLE IF EXISTS dhtstatus;`
 

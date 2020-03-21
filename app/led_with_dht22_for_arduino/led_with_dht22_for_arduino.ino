@@ -17,13 +17,15 @@ uint8_t ledy = D1;                      // yellow led conected to the (D1)
 uint8_t pirSensor = D2;                 // pir sensor conected to the (D2)
 uint8_t relayInput1 = D0;               // relay1 conected to the (D0)
 uint8_t relayInput2 = D3;               // relay2 conected to the (D3)
-uint8_t relayInput3 = D4;               // relay3 conected to the (D4)
+uint8_t servo = D4;                     // servo conected to the (D4)
+uint8_t ir = A0;                        // ir sensor connect to the (A0)
 
 DHT dht(DHTPin, DHTTYPE);               // Initialize DHT sensor.       
 
 float Temperature;                      // temperature variable for storing room temperature
 float Humidity;                         // Humidity variable for storing room Humidity
 int pirsensorValue = 0;                 // pirsensorValue variable for storing human motion detect outside
+int irsensorvalue = 0;                  // irsensorvalue variable for storing human button detect
 
 MDNSResponder mdns;                     // make mdns local server for reserveing domin for given IP
 
@@ -47,14 +49,13 @@ String statusye = "off";
 String statuswe = "off";
 String statusrelaye1 = "off";
 String statusrelaye2 = "off";
-String statusrelaye3 = "off";
 String status_pir = "no";
+String status_ir = "no";
 String statusr = "off";
 String statusy = "off";
 String statusw = "off";
 String statusrelay1 = "off";
 String statusrelay2 = "off";
-String statusrelay3 = "off";
 String allleds = "off";
 
 // Set up the server object
@@ -93,15 +94,14 @@ void setup() {
   Serial.begin(115200);                   // start serial cominucation for monitoring datas
   pinMode(DHTPin, INPUT);                 // start dht pin as input
   pinMode(pirSensor, INPUT);              // start pir pin as input
+  pinMode(ir, INPUT);                     // start ir pin as input
   pinMode(ledr, OUTPUT);                  // start led red pin as output
   pinMode(ledw, OUTPUT);                  // start led white pin as output
   pinMode(ledy, OUTPUT);                  // start led yellow pin as output
   pinMode(relayInput1, OUTPUT);           // start relay1 pin as output
-  pinMode(relayInput2, OUTPUT);           // start relay2 pin as output
-  pinMode(relayInput3, OUTPUT);           // start relay3 pin as output    
+  pinMode(relayInput2, OUTPUT);           // start relay2 pin as output   
   digitalWrite(relayInput1, HIGH);        // turn off the relay1
-  digitalWrite(relayInput2, HIGH);        // turn off the relay2
-  digitalWrite(relayInput3, HIGH);        // turn off the relay3    
+  digitalWrite(relayInput2, HIGH);        // turn off the relay2    
   digitalWrite(ledr, HIGH);               // turn off the red led
   digitalWrite(ledw, HIGH);               // turn off the white led
   digitalWrite(ledy, HIGH);               // turn off the yellow led
@@ -123,7 +123,8 @@ void setup() {
   server.on("/readroomddata", handle_read_room_d_data);
   server.on("/control_led", handlecontrolled);
   server.on("/control_relay", handlecontrolrelay);
-  server.on("/readpirdata", handle_read_pir_data);    
+  server.on("/readpirdata", handle_read_pir_data);
+  server.on("/readirdata", handle_read_ir_data);      
   server.onNotFound(handleNotFound);
 
   // route for checking server is running or not and this handle client route dont need login 
@@ -149,16 +150,32 @@ void loop() {
 
   server.handleClient();                                  // make server to handle all requests comeing from the clients
   read_pir_Sensor();                                      // read pir sensor status
+  read_ir_Sensor();                                       // read ir sensor status
    
+}
+
+void read_ir_Sensor(){
+  /* this function start reading pir sensor status and store them into variables */  
+  
+  irsensorvalue = digitalRead(ir);                  // read the pir sensor value on/off[]
+
+  // start storing datas from declare ir sensor status  
+  if (irsensorvalue == 1){
+      status_ir = "yes";
+  }
+  
+  else{
+      status_ir = "no";  
+  }
+  // end storing datas from declare ir sensor status 
 }
 
 void handlecontrolrelay(){
   /* this function handle controlling 3 status led for showing pysically all results and dont need login */ 
 
   Serial.println("Enter handle control relay");                          // monitoring for start this route
-  statusrelay1 = server.arg("relay1");                                   // getting the values that given to relay1 via http requst that come from client
-  statusrelay2 = server.arg("relay2");                                   // getting the values that given to relay1 via http requst that come from client
-  statusrelay3 = server.arg("relay3");                                   // getting the values that given to relay1 via http requst that come from client    
+  statusrelay1 = server.arg("light");                                   // getting the values that given to relay1 via http requst that come from client
+  statusrelay2 = server.arg("fans");                                   // getting the values that given to relay1 via http requst that come from client    
 
   // start checking that must turn on relay or not
   if (statusrelay1 == "on"){
@@ -178,23 +195,13 @@ void handlecontrolrelay(){
   if (statusrelay2 == "off"){
     digitalWrite(relayInput2,HIGH);
     statusrelaye2 = "off";
-  }
-  if (statusrelay3 == "on"){
-    digitalWrite(relayInput3,LOW);
-    statusrelaye3 = "on";
-  }
-  
-  if (statusrelay3 == "off"){
-    digitalWrite(relayInput3,HIGH);
-    statusrelaye3 = "off";
   }    
   // end checking that must turn on relay or not
 
   JSONVar relays_status_Array;                                                // make json array for sendeng relay1 status via json type
   
-  relays_status_Array["relay1_Status"] = statusrelaye1;                         // adding values to made json array
-  relays_status_Array["relay2_Status"] = statusrelaye2;                         // adding values to made json array
-  relays_status_Array["relay3_Status"] = statusrelaye3;                         // adding values to made json array
+  relays_status_Array["light"] = statusrelaye1;                         // adding values to made json array
+  relays_status_Array["fans"] = statusrelaye2;                         // adding values to made json array
     
   String json_relays_status_String = JSON.stringify(relays_status_Array);      // make final json file on to strig and prepairing for send
   
@@ -217,6 +224,23 @@ void handle_read_pir_data() {
   server.send(200, "text/html", json_pir_status_String);                      // send response to requests comming for this route accros to made json array
   Serial.println("sending response for handle read pir data");                // monitoring for response to this route
   
+}
+
+void handle_read_ir_data() {
+  /* this function handle reading pir status and send respons for client that ask for this route and dont need login */
+
+  Serial.println("Enter handle read ir data");                                // monitoring for start this route
+  Serial.println("string value of ir sensor is:"+status_ir);                  // monitoring ir status that is detect human motion or not 
+  
+  JSONVar ir_status_Array;                                                    // make json array for sendeng pir status via json type
+  
+  ir_status_Array["switch"] = status_ir;                                      // adding values to made json array
+
+  String json_ir_status_String = JSON.stringify(ir_status_Array);             // make final json file on to strig and prepairing for send
+  
+  server.send(200, "text/html", json_ir_status_String);                       // send response to requests comming for this route accros to made json array
+  Serial.println("sending response for handle read ir data");                 // monitoring for response to this route
+    
 }
 
 void read_pir_Sensor() {
@@ -264,14 +288,14 @@ void handleroot() {
   content +=  String(Temperature) + "</p>";                 // showing value of temperature after details
   content += "<br><p>room humadity is : ";                  // this is datail for showing humadity of the mouse room
   content +=  String(Humidity) + "</p>";                    // showing value of humadity after details
-  content += "<br><p>light  is : ";                        // this is datail for showing status of relay1
-  content +=  String(statusrelaye1) + "</p>";                // showing relay1 status after details
-  content += "<br><p>fan(in)  is : ";                        // this is datail for showing status of relay1
-  content +=  String(statusrelaye2) + "</p>";                // showing relay1 status after details
-  content += "<br><p>fan(out) : ";                        // this is datail for showing status of relay1
-  content +=  String(statusrelaye3) + "</p>";                // showing relay1 status after details    
+  content += "<br><p>light  is : ";                         // this is datail for showing status of relay1
+  content +=  String(statusrelaye1) + "</p>";               // showing relay1 status after details
+  content += "<br><p>fans  is : ";                       // this is datail for showing status of relay2
+  content +=  String(statusrelaye2) + "</p>";               // showing relay2 status after details   
   content += "<br><p>human motion detect : ";               // this is datail for showing status of pir human motion detect
-  content +=  String(status_pir) + "</p>";
+  content +=  String(status_pir) + "</p>";                  // showing pirstatus status after details
+  content += "<br><p>food switch toggle detect : ";         // this is datail for showing status of food switch
+  content +=  String(status_ir) + "</p>";                   // showing irstatus status after details
   content += "<br><p><marquee direction='right'>Developed by ::  MOHAMMAD GHAREHBAGH ::</marquee></p>";            
   content += "<br><br> <footer><p>Posted by: mohammad gharehbagh</p><p><a href=\"mailto:mgstudio884@gmail.com\">mgstudio884@gmail.com</a>.</p></footer></body>";
   // end makeing html for showing in "/" route of server with sensor and status variable that stored in other parts of this sketch

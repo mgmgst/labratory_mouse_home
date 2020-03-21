@@ -29,6 +29,19 @@ def getpirstatus():
 
     return motion
 
+def getirstatus():
+    '''this function read food switch status in work place'''
+
+    url = 'http://10.10.10.1/readirdata'
+    respon = requests.get(url)
+    switch = respon.json()['switch']
+    
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    writing_irstatus_to_database(switch,timestamp)
+
+    return switch
+
 def ledcontrol(led,status):
     '''this function can control showing bar status leds'''
 
@@ -55,13 +68,12 @@ def relaycontrol(relaypin, status):
         url = f'http://10.10.10.1/control_relay?{relaypin}={status}'
         respon = requests.get(url)
 
-        stuffs = {'light' : respon.json()['relay1_Status'],
-        'fan(in)' : respon.json()['relay2_Status'],
-        'fan(out)' : respon.json()['relay3_Status'],}
+        stuffs = {'light' : respon.json()['light'],
+        'fans' : respon.json()['fans'],}
         
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        writing_relaystatus_to_database(stuffs['light'],stuffs['fan(in)'],stuffs['fan(out)'],timestamp)
+        writing_relaystatus_to_database(stuffs['light'],stuffs['fans'],timestamp)
 
         return stuffs
     else:
@@ -101,7 +113,7 @@ def relaycheck(relaypin, status):
     ''' in this function relay1 == light & relay2 == fan(in) & relay3 == fan(out) '''
 
     ret = False
-    relays = ['relay1', 'relay2', 'relay3']
+    relays = ['light', 'fans']
     statuss = ['on', 'off']
     if relaypin in relays and status in statuss:
         ret = True
@@ -146,6 +158,15 @@ def reading_pirstatus_from_database():
     db.close()
     return cur.fetchall()
 
+def reading_irstatus_from_database():
+    '''this function read pirstatuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM irstatus;")
+    db.close()
+    return cur.fetchall()
+
 def reading_dhtstatus_from_database():
     '''this function read dhtstatuss from mysql database from past to today and return them'''
 
@@ -165,12 +186,12 @@ def writing_ledstatus_to_database(redled, whiteled, yellowled, timestamp):
     db.commit()
     db.close()
 
-def writing_relaystatus_to_database(light, fanin, fanout, timestamp):
+def writing_relaystatus_to_database(light, fans, timestamp):
     '''this function write collected relaystatuss to mysql database with timestamp'''
 
     db = connect_to_database()    
     cur = db.cursor()
-    qury = f'INSERT INTO relaystatus VALUES ("{light}","{fanin}","{fanout}","{timestamp}");'
+    qury = f'INSERT INTO relaystatus VALUES ("{light}","{fans}","{timestamp}");'
     cur.execute(qury)
     db.commit()
     db.close()
@@ -184,6 +205,16 @@ def writing_pirstatus_to_database(motion,timestamp):
     cur.execute(qury)
     db.commit()
     db.close()
+
+def writing_irstatus_to_database(switch,timestamp):
+    ''' this function write collected irstatuss to mysql databse with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO irstatus VALUES ("{switch}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
 
 def writing_dhtstatus_to_database(hum, temp, timestamp):
     '''this function write collected dhtstatuss to mysql database with timestamp'''
