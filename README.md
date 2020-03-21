@@ -13,6 +13,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add this project on git 
 - [x] make aparat link for project and add it to bottom aparat link
 - [x] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
+- [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
@@ -27,7 +28,6 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] coninue makeing the electrical parts
 - [ ] engining the all work and make the main pattern for all work
 - [ ] makeing graphical pattern for done the project
-- [ ] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 
 This project is in way for writing assay for top subject. 
 
