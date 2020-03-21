@@ -338,12 +338,14 @@ void handleroot() {
   content +=  String(Humidity) + "</p>";                    // showing value of humadity after details
   content += "<br><p>light  is : ";                         // this is datail for showing status of relay1
   content +=  String(statusrelaye1) + "</p>";               // showing relay1 status after details
-  content += "<br><p>fans  is : ";                       // this is datail for showing status of relay2
+  content += "<br><p>fans  is : ";                          // this is datail for showing status of relay2
   content +=  String(statusrelaye2) + "</p>";               // showing relay2 status after details   
   content += "<br><p>human motion detect : ";               // this is datail for showing status of pir human motion detect
   content +=  String(status_pir) + "</p>";                  // showing pirstatus status after details
   content += "<br><p>food switch toggle detect : ";         // this is datail for showing status of food switch
   content +=  String(status_ir) + "</p>";                   // showing irstatus status after details
+  content += "<br><p>food door is : ";                      // this is datail for showing status of food door
+  content +=  String(statusservoe) + "</p>";                // showing servostatus status after details  
   content += "<br><p><marquee direction='right'>Developed by ::  MOHAMMAD GHAREHBAGH ::</marquee></p>";            
   content += "<br><br> <footer><p>Posted by: mohammad gharehbagh</p><p><a href=\"mailto:mgstudio884@gmail.com\">mgstudio884@gmail.com</a>.</p></footer></body>";
   // end makeing html for showing in "/" route of server with sensor and status variable that stored in other parts of this sketch
