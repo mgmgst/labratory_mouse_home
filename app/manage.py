@@ -49,14 +49,13 @@ def ledcontrol(led,status):
         url = f'http://10.10.10.1/control_led?{led}={status}'
         respon = requests.get(url)
         redled = respon.json()['redled']
-        whiteled = respon.json()['whiteled']
         yellowled = respon.json()['yellowled']
         
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        writing_ledstatus_to_database(redled,whiteled,yellowled,timestamp)
+        writing_ledstatus_to_database(redled,yellowled,timestamp)
         
-        return redled, whiteled, yellowled
+        return redled, yellowled
     
     else:
         return 'your givin elements is not true'
@@ -118,7 +117,7 @@ def ledcheck(led,status):
     '''this function check that we send right data for controling status led light bars or not'''
 
     ret = False
-    leds = ['ledred' , 'ledyellow' , 'ledwhite','all']
+    leds = ['ledred' , 'ledyellow' ,'all']
     statuss = ['on' , 'off']
     if led in leds and status in statuss:
         ret = True
@@ -213,12 +212,12 @@ def reading_dhtstatus_from_database():
     db.close()
     return cur.fetchall()            
 
-def writing_ledstatus_to_database(redled, whiteled, yellowled, timestamp):
+def writing_ledstatus_to_database(redled, yellowled, timestamp):
     '''this function write collected ledstatuss to mysql database with timestamp'''
 
     db = connect_to_database()    
     cur = db.cursor()
-    qury = f'INSERT INTO ledstatus VALUES ("{redled}","{whiteled}","{yellowled}","{timestamp}");'
+    qury = f'INSERT INTO ledstatus VALUES ("{redled}","{yellowled}","{timestamp}");'
     cur.execute(qury)
     db.commit()
     db.close()

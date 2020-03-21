@@ -12,16 +12,15 @@ Servo servo;                            // make servo object
 
 //some define for bourds and stuff conected to it
 #define ledr    14                      // red led conected to (D5) 
-#define ledw    12                      // white led conected to (D6)
+#define ledy    12                      // yellow led conected to (D6)
 #define DHTPin    13                    // dht22 conected to (D7)
 #define DHTTYPE DHT22                   // DHT 22 (AM2302), AM2321
 
-uint8_t ledy = D1;                      // yellow led conected to the (D1)
 uint8_t pirSensor = D2;                 // pir sensor conected to the (D2)
 uint8_t relayInput1 = D0;               // relay1 conected to the (D0)
 uint8_t relayInput2 = D3;               // relay2 conected to the (D3)
-uint8_t servopin = D4;                     // servo conected to the (D4)
-uint8_t ir = A0;                        // ir sensor connect to the (A0)
+uint8_t servopin = D4;                  // servo conected to the (D4)
+uint8_t ir = D1;                        // ir sensor connect to the (A0)
 
 DHT dht(DHTPin, DHTTYPE);               // Initialize DHT sensor.       
 
@@ -49,7 +48,6 @@ String msg;
 //======================== variable for for storing diferent stuff statuss ===========================
 String statusre = "off";
 String statusye = "off";
-String statuswe = "off";
 String statusrelaye1 = "off";
 String statusrelaye2 = "off";
 String statusservo = "close";
@@ -58,7 +56,6 @@ String status_pir = "no";
 String status_ir = "no";
 String statusr = "off";
 String statusy = "off";
-String statusw = "off";
 String statusrelay1 = "off";
 String statusrelay2 = "off";
 String allleds = "off";
@@ -101,14 +98,12 @@ void setup() {
   pinMode(pirSensor, INPUT);              // start pir pin as input
   pinMode(ir, INPUT);                     // start ir pin as input
   pinMode(ledr, OUTPUT);                  // start led red pin as output
-  pinMode(ledw, OUTPUT);                  // start led white pin as output
   pinMode(ledy, OUTPUT);                  // start led yellow pin as output
   pinMode(relayInput1, OUTPUT);           // start relay1 pin as output
   pinMode(relayInput2, OUTPUT);           // start relay2 pin as output   
   digitalWrite(relayInput1, HIGH);        // turn off the relay1
   digitalWrite(relayInput2, HIGH);        // turn off the relay2    
   digitalWrite(ledr, HIGH);               // turn off the red led
-  digitalWrite(ledw, HIGH);               // turn off the white led
   digitalWrite(ledy, HIGH);               // turn off the yellow led
 
   WiFi.mode(WIFI_AP);                                                             // start wifi as server and client mode
@@ -330,8 +325,6 @@ void handleroot() {
   content +=  String(statusre) + "</p>";                    // showing red led status after details
   content += "<br><p>led yellow is : " ;                    // this is datail for showing status of yellow led
   content +=  String(statusye) + "</p>";                    // showing yellow led status after details
-  content += "<br><p>led white  is : " ;                    // this is datail for showing status of white led
-  content +=  String(statuswe) + "</p>";                    // showing white led status after details
   content += "<br><p>room temperature is : ";               // this is datail for showing temperature of the mouse room
   content +=  String(Temperature) + "</p>";                 // showing value of temperature after details
   content += "<br><p>room humadity is : ";                  // this is datail for showing humadity of the mouse room
@@ -368,8 +361,7 @@ void handlecontrolled(){
   Serial.println("Enter handle control leds");                      // monitoring for start this route
   statusr = server.arg("ledred");                     // getting the values that given to red led via http requst that come from client
   statusy = server.arg("ledyellow");                  // getting the values that given to yellow led via http requst that come from client
-  statusw = server.arg("ledwhite");                   // getting the values that given to white led via http requst that come from client
-  allleds = server.arg("all");                        // getting the values that given to white led via http requst that come from client
+  allleds = server.arg("all");                        // getting the values that given to all led via http requst that come from client
   
   // start checking wich led must turn on or not via get variable that collected from client request   
   if (statusr == "on"){
@@ -391,31 +383,17 @@ void handlecontrolled(){
     digitalWrite(ledy,HIGH);
     statusye = "off";
   }
-
-  if (statusw == "on"){
-    digitalWrite(ledw,LOW);
-    statuswe = "on";
-  }
-  
-  if (statusw == "off"){
-    digitalWrite(ledw,HIGH);
-    statuswe = "off";  
-  }
   
   if (allleds == "on"){
-    digitalWrite(ledw,LOW);
     digitalWrite(ledr,LOW);
     digitalWrite(ledy,LOW);
-    statuswe = "on";
     statusye = "on";
     statusre = "on";                  
   }
   
   if (allleds == "off"){
-    digitalWrite(ledw,HIGH);
     digitalWrite(ledr,HIGH);
     digitalWrite(ledy,HIGH);
-    statuswe = "off";
     statusye = "off";
     statusre = "off";                  
   }  
@@ -426,7 +404,6 @@ void handlecontrolled(){
   JSONVar led_status_Array;                                                 // make json array for sendeng leds status via json type
   
   led_status_Array["redled"] = statusre;                                    // adding wanted value to made json array
-  led_status_Array["whiteled"] = statuswe;                                  // adding wanted value to made json array
   led_status_Array["yellowled"] = statusye;                                 // adding wanted value to made json array
 
   String json_led_status_String = JSON.stringify(led_status_Array);         // make final json file on to strig and prepairing for send

@@ -63,24 +63,24 @@ Every single step of this project is screen captures and you can follow them [On
 
 4. run this comand in MYSQL database : `DROP TABLE IF EXISTS ledstatus;`
 
-5. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE ledstatus (redled VARCHAR(30),whiteled VARCHAR(30) , yellowled VARCHAR(30) , timestamp  TIMESTAMP);`
+5. run this comand in MYSQL database : `CREATE TABLE ledstatus (redled VARCHAR(30), yellowled VARCHAR(30) , timestamp  TIMESTAMP);`
 
 6. run this comand in MYSQL database : `DROP TABLE IF EXISTS relaystatus;`
 
-7. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE relaystatus (light VARCHAR(30),fans VARCHAR(30) ,timestamp  TIMESTAMP);`
+7. run this comand in MYSQL database : `CREATE TABLE relaystatus (light VARCHAR(30),fans VARCHAR(30) ,timestamp  TIMESTAMP);`
 
 8. run this comand in MYSQL database : `DROP TABLE IF EXISTS pirstatus;`
 
-9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE pirstatus (motion VARCHAR(30), timestamp  TIMESTAMP);`
+9. run this comand in MYSQL database : `CREATE TABLE pirstatus (motion VARCHAR(30), timestamp  TIMESTAMP);`
 
 10. run this comand in MYSQL database : `DROP TABLE IF EXISTS irstatus;`
 
-11. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE irstatus (switch VARCHAR(30), timestamp  TIMESTAMP);`
+11. run this comand in MYSQL database : `CREATE TABLE irstatus (switch VARCHAR(30), timestamp  TIMESTAMP);`
 
 12. run this comand in MYSQL database : `DROP TABLE IF EXISTS dhtstatus;`
 
-13. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE dhtstatus (hum VARCHAR(30),temp VARCHAR(30) , timestamp  TIMESTAMP);`
+13. run this comand in MYSQL database : `CREATE TABLE dhtstatus (hum VARCHAR(30),temp VARCHAR(30) , timestamp  TIMESTAMP);`
 
 14. run this comand in MYSQL database : `DROP TABLE IF EXISTS servostatus;`
 
-15. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE servostatus (servostatus VARCHAR(30),timestamp  TIMESTAMP);`
+15. run this comand in MYSQL database : `CREATE TABLE servostatus (servostatus VARCHAR(30),timestamp  TIMESTAMP);`
