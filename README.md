@@ -15,6 +15,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
 - [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
+- [ ] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
 - [ ] coninue makeing the electrical parts
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
