@@ -35,7 +35,6 @@ This project is in way for writing assay for top subject.
  در این پروژه از تکنولوژی های زیر استفاده می شه:
 
 - پایتون
-- فلسک
 - هسته وای فای esp8266
 - مای اسکوئل
 - الکترونیک
