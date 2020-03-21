@@ -6,6 +6,9 @@
 #include <SoftwareSerial.h>             // arduino virtual serial pin and cominucation library
 #include <ESP8266mDNS.h>                // arduino mdns library for running local dns server for virtual domin
 #include "DHT.h"                        // arduino dht temperature and humadity sensor library
+#include <Servo.h>                      // arduino servo library
+
+Servo servo;                            // make servo object
 
 //some define for bourds and stuff conected to it
 #define ledr    14                      // red led conected to (D5) 
@@ -17,7 +20,7 @@ uint8_t ledy = D1;                      // yellow led conected to the (D1)
 uint8_t pirSensor = D2;                 // pir sensor conected to the (D2)
 uint8_t relayInput1 = D0;               // relay1 conected to the (D0)
 uint8_t relayInput2 = D3;               // relay2 conected to the (D3)
-uint8_t servo = D4;                     // servo conected to the (D4)
+uint8_t servopin = D4;                     // servo conected to the (D4)
 uint8_t ir = A0;                        // ir sensor connect to the (A0)
 
 DHT dht(DHTPin, DHTTYPE);               // Initialize DHT sensor.       
@@ -49,6 +52,8 @@ String statusye = "off";
 String statuswe = "off";
 String statusrelaye1 = "off";
 String statusrelaye2 = "off";
+String statusservo = "close";
+String statusservoe = "close";
 String status_pir = "no";
 String status_ir = "no";
 String statusr = "off";
@@ -123,6 +128,7 @@ void setup() {
   server.on("/readroomddata", handle_read_room_d_data);
   server.on("/control_led", handlecontrolled);
   server.on("/control_relay", handlecontrolrelay);
+  server.on("/control_servo", handlecontrolservo);  
   server.on("/readpirdata", handle_read_pir_data);
   server.on("/readirdata", handle_read_ir_data);      
   server.onNotFound(handleNotFound);
@@ -143,7 +149,14 @@ void setup() {
   //starting server ...
   server.begin();
   Serial.println("HTTP server started");
-  
+
+  servo.attach(servopin);                                 // servo connected to D4
+
+  servo.write(0);                                         // servo go to degree 0
+
+  delay(1000);                                            // wait one secound allthing come up
+
+  servo.detach(); //stop sending pulses to reserve power on the Arduino.
 }
 
 void loop() {
@@ -170,8 +183,43 @@ void read_ir_Sensor(){
   // end storing datas from declare ir sensor status 
 }
 
+void handlecontrolservo() {
+  /* this function handle controlling servo for controlling pysical food door and dont need login */ 
+
+  Serial.println("Enter handle control servo");                         // monitoring for start this route
+  statusservo = server.arg("servo");                                   // getting the values that given to relay1 via http requst that come from client    
+
+  // start checking that must turn on serbo or not
+  if (statusservo == "open"){
+    servo.attach(servopin);                                 // servo connected to D4
+    servo.write(90);                                        // open to door 90 degree
+    delay(1000);
+    servo.detach();                                         //stop sending pulses to reserve power on the Arduino.
+    statusservoe = "open";
+  }
+  
+  if (statusservo == "close"){
+    servo.attach(servopin);                                 // servo connected to D4
+    servo.write(0);                                         // open to door 0 degree
+    delay(1000);
+    servo.detach();                                         //stop sending pulses to reserve power on the Arduino.
+    statusservoe = "close";
+  }    
+  // end checking that must turn on servo or not
+
+  JSONVar servo_status_Array;                                                                             // make json array for sendeng relay1 status via json type
+  
+  servo_status_Array["servo"] = statusservoe;                                                            // adding values to made json array
+    
+  String json_servo_status_String = JSON.stringify(servo_status_Array);                                   // make final json file on to strig and prepairing for send
+  
+  server.send(200, "text/html", json_servo_status_String);                                                // send response to requests comming for this route accros to made json array
+  Serial.println("sending the response for handle control servo");                                        // monitoring for response to this route
+  
+}
+
 void handlecontrolrelay(){
-  /* this function handle controlling 3 status led for showing pysically all results and dont need login */ 
+  /* this function handle controlling 2 relay fans and light for controlling pysical stuffs and dont need login */ 
 
   Serial.println("Enter handle control relay");                          // monitoring for start this route
   statusrelay1 = server.arg("light");                                   // getting the values that given to relay1 via http requst that come from client

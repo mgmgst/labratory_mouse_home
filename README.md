@@ -14,6 +14,8 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] make aparat link for project and add it to bottom aparat link
 - [x] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
 - [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
+- [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
+- [ ] coninue makeing the electrical parts
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
@@ -24,8 +26,6 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [ ] send assay for ISI and so many other diferrent places
 - [ ] getting help from mr.hosseini and mr.khaderian
 - [ ] adding more professional persons to te project
-- [ ] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
-- [ ] coninue makeing the electrical parts
 - [ ] engining the all work and make the main pattern for all work
 - [ ] makeing graphical pattern for done the project
 
@@ -73,10 +73,14 @@ Every single step of this project is screen captures and you can follow them [On
 
 9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE pirstatus (motion VARCHAR(30), timestamp  TIMESTAMP);`
 
-8. run this comand in MYSQL database : `DROP TABLE IF EXISTS irstatus;`
+10. run this comand in MYSQL database : `DROP TABLE IF EXISTS irstatus;`
 
-9. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE irstatus (switch VARCHAR(30), timestamp  TIMESTAMP);`
+11. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE irstatus (switch VARCHAR(30), timestamp  TIMESTAMP);`
 
-10. run this comand in MYSQL database : `DROP TABLE IF EXISTS dhtstatus;`
+12. run this comand in MYSQL database : `DROP TABLE IF EXISTS dhtstatus;`
 
-11. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE dhtstatus (hum VARCHAR(30),temp VARCHAR(30) , timestamp  TIMESTAMP);`
+13. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE dhtstatus (hum VARCHAR(30),temp VARCHAR(30) , timestamp  TIMESTAMP);`
+
+14. run this comand in MYSQL database : `DROP TABLE IF EXISTS servostatus;`
+
+15. db configs are in config.py. Create the db and grant all access to the specified user with specified password, but you also need to add this table to the database manually: `CREATE TABLE servostatus (servostatus VARCHAR(30),timestamp  TIMESTAMP);`

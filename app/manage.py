@@ -62,7 +62,7 @@ def ledcontrol(led,status):
         return 'your givin elements is not true'
 
 def relaycontrol(relaypin, status):
-    '''this function can control relay [<exept for now can control relay1 that can control big panel light>] that control lights and power stuffs'''
+    '''this function can control relays that control lights and fans'''
     
     if relaycheck(relaypin,status):
         url = f'http://10.10.10.1/control_relay?{relaypin}={status}'
@@ -76,6 +76,23 @@ def relaycontrol(relaypin, status):
         writing_relaystatus_to_database(stuffs['light'],stuffs['fans'],timestamp)
 
         return stuffs
+    else:
+        return 'your givin elements is not true'
+
+def servocontrol(servo, status):
+    '''this function can control servo that control food door'''
+    
+    if relaycheck(servo,status):
+        url = f'http://10.10.10.1/control_servo?{servo}={status}'
+        respon = requests.get(url)
+
+        servostatus = respon.json()["servo"]
+        
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        writing_servostatus_to_database(servostatus,timestamp)
+
+        return servostatus
     else:
         return 'your givin elements is not true'
 
@@ -109,13 +126,24 @@ def ledcheck(led,status):
     return ret
 
 def relaycheck(relaypin, status):
-    '''this function check that we send right data for controling [<exept for now can check relay1 that can control big panel light>] relays that they control power stuff or not'''
-    ''' in this function relay1 == light & relay2 == fan(in) & relay3 == fan(out) '''
+    '''this function check that we send right data for controling relays that they control power stuff or not'''
+    ''' in this function relay1 == light & relay2 == fans '''
 
     ret = False
     relays = ['light', 'fans']
     statuss = ['on', 'off']
     if relaypin in relays and status in statuss:
+        ret = True
+        
+    return ret
+
+def servocheck(servo, status):
+    '''this function check that we send right data for controling servo that control food door'''
+
+    ret = False
+    servop = "servo"
+    statuss = ['open', 'close']
+    if servo == servop and status in statuss:
         ret = True
         
     return ret
@@ -149,6 +177,15 @@ def reading_relaystatus_from_database():
     db.close()
     return cur.fetchall()
 
+def reading_servostatus_from_database():
+    '''this function read servostatus from mysql database from  past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM servostatus;")
+    db.close()
+    return cur.fetchall()
+
 def reading_pirstatus_from_database():
     '''this function read pirstatuss from mysql database from past to today and return them'''
 
@@ -159,7 +196,7 @@ def reading_pirstatus_from_database():
     return cur.fetchall()
 
 def reading_irstatus_from_database():
-    '''this function read pirstatuss from mysql database from past to today and return them'''
+    '''this function read irstatuss from mysql database from past to today and return them'''
 
     db = connect_to_database()
     cur = db.cursor()
@@ -195,6 +232,16 @@ def writing_relaystatus_to_database(light, fans, timestamp):
     cur.execute(qury)
     db.commit()
     db.close()
+
+def writing_servostatus_to_database(servostatus,timestamp):
+    '''this function write collected servostatus to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO servostatus VALUES ("{servostatus}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
 
 def writing_pirstatus_to_database(motion,timestamp):
     '''this function write collected pirstatuss to mysql database with timestamp'''
