@@ -7,7 +7,7 @@ __pycache__/
 *.swp
 # C extensions
 *.so
-
+.\work_files
 info.txt
 
 # Distribution / packaging
