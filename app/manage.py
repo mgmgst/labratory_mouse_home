@@ -1,6 +1,35 @@
 import requests
 import mysql.connector
 from datetime import datetime
+from time import sleep
+
+def getalldatas():
+    '''this function get all datas by one json code and store them into mysql database in each seprate tables and in one great table'''
+
+    url = 'http://10.10.10.1/jsond'
+    respon = requests.get(url)
+    
+    hum = respon.json()['humadity']
+    temp = respon.json()['temperature']
+    motion = respon.json()['motion']
+    switch = respon.json()['switch']
+    redled = respon.json()['redled']
+    yellowled = respon.json()['yellowled']
+    light = respon.json()['light']
+    fans = respon.json()['fans']
+    servostatus = respon.json()["servo"]
+    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    writing_dhtstatus_to_database(hum, temp, timestamp)
+    writing_pirstatus_to_database(motion, timestamp)
+    writing_irstatus_to_database(switch, timestamp)
+    writing_ledstatus_to_database(redled, yellowled, timestamp)
+    writing_relaystatus_to_database(light, fans, timestamp)
+    writing_servostatus_to_database(servostatus, timestamp)
+
+    writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp)
+
+    return hum, temp, motion, switch, redled, yellowled, light, fans, servostatus
 
 def getroomstatus():
     '''this function read room temperature and humadity'''
@@ -212,6 +241,15 @@ def reading_dhtstatus_from_database():
     db.close()
     return cur.fetchall()            
 
+def reading_alldatas_to_database():
+    '''this function read alldatas statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM alldatasstatus;")
+    db.close()
+    return cur.fetchall()     
+
 def writing_ledstatus_to_database(redled, yellowled, timestamp):
     '''this function write collected ledstatuss to mysql database with timestamp'''
 
@@ -271,3 +309,13 @@ def writing_dhtstatus_to_database(hum, temp, timestamp):
     cur.execute(qury)
     db.commit()
     db.close()    
+
+def writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp):
+    '''this function write all collected datas to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO alldatasstatus VALUES ("{hum}","{temp}","{motion}","{switch}","{redled}","{yellowled}","{light}","{fans}","{servostatus}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()

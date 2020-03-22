@@ -119,6 +119,7 @@ void setup() {
   
   // Configure the server's routes
   server.on("/", handleroot);
+  server.on("/jsond", handlerootjsond);
   server.on("/login", handlelogin);
   server.on("/readroomddata", handle_read_room_d_data);
   server.on("/control_led", handlecontrolled);
@@ -162,6 +163,35 @@ void loop() {
    
 }
 
+void handlerootjsond() {
+  /* this function handle all datas by json code and send it to requests comming from clients and dont need login */ 
+
+  readSensor();                                            // reading dht22 sensor status
+
+  Serial.println("Enter handle root json");                                                                // monitoring for start this route
+
+  JSONVar all_status_Array;                                                                                // make json array for sendeng all statuss via json type
+  
+  all_status_Array["servo"] = statusservoe;                                                                // adding values to made json array
+  all_status_Array["light"] = statusrelaye1;                                                               // adding values to made json array
+  all_status_Array["fans"] = statusrelaye2;                                                                // adding values to made json array
+  all_status_Array["motion"] = status_pir;                                                                 // adding values to made json array
+  all_status_Array["switch"] = status_ir;                                                                  // adding values to made json array
+  all_status_Array["redled"] = statusre;                                                                   // adding wanted value to made json array
+  all_status_Array["yellowled"] = statusye;                                                                // adding wanted value to made json array
+  all_status_Array["temperature"] = Temperature;                                                           // adding wanted value to made json array
+  all_status_Array["humadity"] = Humidity;                                                                 // adding wanted value to made json array        
+    
+  String json_all_status_String = JSON.stringify(all_status_Array);                                        // make final json file on to strig and prepairing for send  
+  
+  server.send(200, "text/html", json_all_status_String);                                                   // send response to requests comming for this route accros to made json array
+  // start monitoring datas that collected all
+  Serial.println("response is : ");
+  Serial.print(json_all_status_String);
+  // end monitoring datas that collected all
+  Serial.println("sending the response for handle get all data json");                                     // monitoring for response to this route
+}
+
 void read_ir_Sensor(){
   /* this function start reading pir sensor status and store them into variables */  
   
@@ -182,7 +212,7 @@ void handlecontrolservo() {
   /* this function handle controlling servo for controlling pysical food door and dont need login */ 
 
   Serial.println("Enter handle control servo");                         // monitoring for start this route
-  statusservo = server.arg("servo");                                   // getting the values that given to relay1 via http requst that come from client    
+  statusservo = server.arg("servo");                                   // getting the values that given to servo via http requst that come from client    
 
   // start checking that must turn on serbo or not
   if (statusservo == "open"){
@@ -202,7 +232,7 @@ void handlecontrolservo() {
   }    
   // end checking that must turn on servo or not
 
-  JSONVar servo_status_Array;                                                                             // make json array for sendeng relay1 status via json type
+  JSONVar servo_status_Array;                                                                             // make json array for sendeng servo status via json type
   
   servo_status_Array["servo"] = statusservoe;                                                            // adding values to made json array
     

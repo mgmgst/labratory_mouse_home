@@ -15,8 +15,8 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add my sql service to it and sava all of data on it and write the help for this in readme.md <{[id , {info}, timestamp , ... ]}>
 - [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
-- [ ] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
-- [ ] coninue makeing the electrical parts
+- [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
+- [ ] coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
@@ -85,3 +85,7 @@ Every single step of this project is screen captures and you can follow them [On
 14. run this comand in MYSQL database : `DROP TABLE IF EXISTS servostatus;`
 
 15. run this comand in MYSQL database : `CREATE TABLE servostatus (servostatus VARCHAR(30),timestamp  TIMESTAMP);`
+
+16. run this comand in MYSQL database : `DROP TABLE IF EXISTS alldatasstatus;`
+
+17. run this comand in MYSQL database : `CREATE TABLE alldatasstatus (hum VARCHAR(30),temp VARCHAR(30),motion VARCHAR(30),switch VARCHAR(30),redled VARCHAR(30),yellowled VARCHAR(30),light VARCHAR(30),fans VARCHAR(30),servostatus VARCHAR(30),timestamp  TIMESTAMP);`
