@@ -17,9 +17,10 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
 - [ ] coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
+- [ ] make graphical user interface for showing results and charts desktop app or website web service
+- [ ] add gui input aplication forms for entering datas by hand to database for (hight, wight, and mentual test and ...)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
-- [ ] make graphical user interface for showing results and charts desktop app or website web service
 - [ ] writeing assay for result of electromagnetic fields on human and live creaters
 - [ ] all works must be text and haveing some things from them
 - [ ] write the book for it
