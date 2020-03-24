@@ -16,9 +16,9 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
-- [ ] coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
+- [ ] continue codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
+- [ ] make pre layout balsamic design for gui its the end of it just continue it.
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
-- [ ] add gui input aplication forms for entering datas by hand to database for (hight, wight, and mentual test and ...)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] writeing assay for result of electromagnetic fields on human and live creaters
@@ -37,6 +37,7 @@ This project is in way for writing assay for top subject.
  در این پروژه از تکنولوژی های زیر استفاده می شه:
 
 - پایتون
+- فلسک
 - هسته وای فای esp8266
 - مای اسکوئل
 - الکترونیک

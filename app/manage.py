@@ -138,9 +138,14 @@ def login():
     username = 'mgmgst'
     password = '1051154731'
     url = f'http://10.10.10.1/login?USERNAME={username}&PASSWORD={password}'
-    respon = requests.get(url)
-
-    return respon
+    session = requests.session()
+    respon = session.get(url)
+    
+    if respon.status_code == 200:
+        return session
+    
+    else:
+        return f'can not login error : {respon.status_code}'
             
 def ledcheck(led,status):
     '''this function check that we send right data for controling status led light bars or not'''
@@ -319,3 +324,9 @@ def writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, l
     cur.execute(qury)
     db.commit()
     db.close()
+
+# TODO : write main contol app in the bottem if
+if __name__ == "__main__":
+    '''if you run this code from your pc it will start running at here'''
+
+    pass
