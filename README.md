@@ -17,8 +17,8 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
 - [x] make pre layout balsamic design for gui its the end of it just continue it.
-- [ ] continue codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
-- [ ] make graphical user interface for showing results and charts desktop app or website web service
+- [x] make graphical user interface for showing results and charts desktop app or website web service
+- [ ] continue work on gui and codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] writeing assay for result of electromagnetic fields on human and live creaters
@@ -36,6 +36,7 @@ This project is in way for writing assay for top subject.
 <div dir="rtl"> 
  در این پروژه از تکنولوژی های زیر استفاده می شه:
 
+- opencv
 - پایتون
 - فلسک
 - هسته وای فای esp8266
