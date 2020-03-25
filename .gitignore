@@ -9,6 +9,7 @@ __pycache__/
 *.so
 work_files/
 info.txt
+test_codes
 
 # Distribution / packaging
 .Python

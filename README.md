@@ -16,8 +16,8 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add servo motor + ir distance sensor to all thing as shematic + code >> arduino and python and mysql service and ...
 - [x] make data sheet for all ellectrical part of the work <(servo motor and ir distance sensor)>
 - [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
+- [x] make pre layout balsamic design for gui its the end of it just continue it.
 - [ ] continue codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
-- [ ] make pre layout balsamic design for gui its the end of it just continue it.
 - [ ] make graphical user interface for showing results and charts desktop app or website web service
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
