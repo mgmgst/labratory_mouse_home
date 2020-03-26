@@ -1,4 +1,4 @@
-# title : labratory_mouse_home
+﻿# title : labratory_mouse_home
 
 [![LICENSE](https://img.shields.io/badge/LICENSE-GPL--3.0-green)](https://github.com/jadijadi/sms_serial_verification/blob/master/LICENSE) 
 [![Requirements](https://img.shields.io/badge/Requirements-See%20Here-orange)](https://github.com/jadijadi/sms_serial_verification/blob/master/requirements.txt)
@@ -18,6 +18,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] add functions in both side arduino and python codes to get all datas at one time in one json file and store them into mysql database
 - [x] make pre layout balsamic design for gui its the end of it just continue it.
 - [x] make graphical user interface for showing results and charts desktop app or website web service
+- [ ] add four top pre designed pages in balsamic mokup to flask then work on backend of project
 - [ ] continue work on gui and codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
