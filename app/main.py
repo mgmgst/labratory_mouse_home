@@ -1,3 +1,4 @@
+# start includeing librarys that we need for work
 import server_manage
 import requests
 import mysql.connector
@@ -14,6 +15,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from singlemotiondetector  import SingleMotionDetector
 from imutils.video import VideoStream
+# start includeing librarys that we need for work
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -24,13 +26,15 @@ lock = threading.Lock()
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
+# start flask app
 app = Flask(__name__)
 
-# config
+# config flask secret key
 app.config.update(
     SECRET_KEY = "secretxxx"
 )
 
+# config flask limmiter
 limiter = Limiter(
     app,
     key_func=get_remote_address,
@@ -75,33 +79,42 @@ def sys_check():
 
 @app.route('/time_feed')
 def time_feed():
+    '''tihs function make time to show in main page but i did'nt use it its for future plan'''
     def generate():
         while True:
             yield datetime.datetime.now().strftime("%Y.%m.%d|%H:%M:%S")
             time.sleep(1)
     return Response(generate(), mimetype='text')
 
+# main route for flask server and url methods ar post and get
 @app.route('/',methods=["GET", "POST"])
 @login_required
-def index(): 
+def index():
+    '''this function handle main page''' 
     return render_template('dashboard.html')
 
+# documentation route for flask server
 @app.route('/doc')
 @login_required
 def doc(): 
+    ''' this function handle documantation page for requests coming for route '''
     return render_template('documentation.html')
 
-
+# all datas tables page route for flask server
 @app.route('/table')
 @login_required
 def table(): 
+    '''this function handle tables page for request comeing for this route'''
     return render_template('tables.html')
 
+# add datas page route for flask server and url methods ar post and get
 @app.route('/add',methods=["GET", "POST"])
 @login_required
 def userp(): 
+    '''this function handle add datas page for request comeing for this route'''
     return render_template('add.html')
-           
+
+# login route for flask server that have limmiter (10 times) for stop brute force attaks and have check and its methods are posta nd get           
 @app.route('/login',methods=["GET", "POST"])
 @limiter.limit("10 per minute")
 def login():

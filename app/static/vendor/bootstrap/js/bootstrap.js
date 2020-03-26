@@ -1,8 +1,4 @@
-/*!
- * Bootstrap v4.0.0-beta (https://getbootstrap.com)
- * Copyright 2011-2017 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- */
+
 
 if (typeof jQuery === 'undefined') {
   throw new Error('Bootstrap\'s JavaScript requires jQuery. jQuery must be included before Bootstrap\'s JavaScript.')
@@ -26,12 +22,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): util.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Util = function ($) {
 
@@ -178,12 +169,7 @@ var Util = function ($) {
   return Util;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): alert.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Alert = function ($) {
 
@@ -357,12 +343,7 @@ var Alert = function ($) {
   return Alert;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): button.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Button = function ($) {
 
@@ -527,12 +508,7 @@ var Button = function ($) {
   return Button;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): carousel.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Carousel = function ($) {
 
@@ -1034,12 +1010,7 @@ var Carousel = function ($) {
   return Carousel;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): collapse.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Collapse = function ($) {
 
@@ -1397,12 +1368,7 @@ var Collapse = function ($) {
 
 /* global Popper */
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): dropdown.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Dropdown = function ($) {
 
@@ -1540,7 +1506,7 @@ var Dropdown = function ($) {
       // if this is a touch-enabled device we add extra
       // empty mouseover listeners to the body's immediate children;
       // only needed because of broken event delegation on iOS
-      // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+ 
       if ('ontouchstart' in document.documentElement && !$(parent).closest(Selector.NAVBAR_NAV).length) {
         $('body').children().on('mouseover', null, $.noop);
       }
@@ -1822,12 +1788,7 @@ var Dropdown = function ($) {
   return Dropdown;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): modal.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Modal = function ($) {
 
@@ -2393,12 +2354,7 @@ var Modal = function ($) {
   return Modal;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): scrollspy.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var ScrollSpy = function ($) {
 
@@ -2707,12 +2663,7 @@ var ScrollSpy = function ($) {
   return ScrollSpy;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): tab.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Tab = function ($) {
 
@@ -2959,18 +2910,13 @@ var Tab = function ($) {
 
 /* global Popper */
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): tooltip.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
+
 
 var Tooltip = function ($) {
 
   /**
    * Check for Popper dependency
-   * Popper - https://popper.js.org
+
    */
   if (typeof Popper === 'undefined') {
     throw new Error('Bootstrap tooltips require Popper.js (https://popper.js.org)');
@@ -3230,7 +3176,7 @@ var Tooltip = function ($) {
         // if this is a touch-enabled device we add extra
         // empty mouseover listeners to the body's immediate children;
         // only needed because of broken event delegation on iOS
-        // https://www.quirksmode.org/blog/archives/2014/02/mouse_event_bub.html
+        
         if ('ontouchstart' in document.documentElement) {
           $('body').children().on('mouseover', null, $.noop);
         }
@@ -3632,12 +3578,6 @@ var Tooltip = function ($) {
   return Tooltip;
 }(jQuery);
 
-/**
- * --------------------------------------------------------------------------
- * Bootstrap (v4.0.0-beta): popover.js
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
- * --------------------------------------------------------------------------
- */
 
 var Popover = function ($) {
 
