@@ -325,7 +325,6 @@ def writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, l
     db.commit()
     db.close()
 
-# TODO : write main contol app in the bottem if
 if __name__ == "__main__":
     '''if you run this code from your pc it will start running at here'''
 

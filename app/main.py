@@ -107,6 +107,20 @@ def table():
     '''this function handle tables page for request comeing for this route'''
     return render_template('tables.html')
 
+# control devices page route for flask server
+@app.route('/control')
+@login_required
+def control_Page(): 
+    '''this function handle control page for request comeing for this route'''
+    return render_template('control_Page.html')
+
+# live camera page route for flask server
+@app.route('/camera')
+@login_required
+def camera_Page(): 
+    '''this function handle live camera page for request comeing for this route'''
+    return render_template('live_camera.html') 
+
 # add datas page route for flask server and url methods ar post and get
 @app.route('/add',methods=["GET", "POST"])
 @login_required

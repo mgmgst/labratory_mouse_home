@@ -57,6 +57,18 @@
             </a>
           </li>
           <li>
+            <a href="control">
+              <i class="tim-icons icon-controller"></i>
+              <p>control page</p>
+            </a>
+          </li>
+          <li>
+            <a href="camera">
+              <i class="tim-icons icon-video-66"></i>
+              <p>LIVE CAMERA</p>
+            </a>
+          </li>                       
+          <li>
             <a href="doc">
               <i class="tim-icons icon-align-center"></i>
               <p>Documents</p>
@@ -109,6 +121,14 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
+        {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                        {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+                    </div>
+        {% endfor %} {% endif %} {% endwith %}
         <div class="row">
           <div class="col-md-8">
             <div class="card">

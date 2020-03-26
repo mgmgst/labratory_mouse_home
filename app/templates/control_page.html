@@ -50,13 +50,13 @@
               <p>ADD DATAS</p>
             </a>
           </li>
-          <li class="active ">
+          <li>
             <a href="table">
               <i class="tim-icons icon-puzzle-10"></i>
               <p>Table List</p>
             </a>
           </li>
-          <li>
+          <li class="active ">
             <a href="control">
               <i class="tim-icons icon-controller"></i>
               <p>control page</p>
@@ -67,7 +67,7 @@
               <i class="tim-icons icon-video-66"></i>
               <p>LIVE CAMERA</p>
             </a>
-          </li>                       
+          </li>                     
           <li>
             <a href="doc">
               <i class="tim-icons icon-align-center"></i>
@@ -142,155 +142,61 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
                     </div>
-        {% endfor %} {% endif %} {% endwith %}
+        {% endfor %} {% endif %} {% endwith %}      
+        <div class="card w-75">
         <div class="row">
-        <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> ADDED DATAS TABLE</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter " id="">
-                    <thead class=" text-primary">
-                      <th>
-                        temp
-                      </th>
-                      <th>
-                        hum
-                      </th>
-                      <th>
-                        weight
-                      </th>
-                      <th>
-                        hight
-                      </th>
-                      <th>
-                        title
-                      </th>
-                      <th>
-                        name
-                      </th>
-                      <th>
-                        discribtion
-                      </th>
-                      <th class="text-center">
-                        timestamp
-                      </th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          0 'c
-                        </td>
-                        <td>
-                          0 %
-                        </td>
-                        <td>
-                          0 g
-                        </td>
-                        <td>
-                          0 cm
-                        </td>
-                        <td>
-                          mg
-                        </td>
-                        <td>
-                          mg
-                        </td>
-                        <td>
-                          mg
-                        </td>                                                                                                                                                
-                        <td class="text-center">
-                          2020-01-01 00:00:00
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>        
-          <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> ALL DATAS TABLE</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter " id="">
-                    <thead class=" text-primary">
-                      <th>
-                        temp
-                      </th>
-                      <th>
-                        hum
-                      </th>
-                      <th>
-                        motion
-                      </th>
-                      <th>
-                        ir switch
-                      </th>
-                      <th>
-                        red led
-                      </th>
-                      <th>
-                        yellow led
-                      </th>
-                      <th>
-                        light
-                      </th>
-                      <th>
-                        fans
-                      </th>                                                                  
-                      <th>
-                        servo
-                      </th>
-                      <th class="text-center">
-                        timestamp
-                      </th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          0 'c
-                        </td>
-                        <td>
-                          0 %
-                        </td>
-                        <td>
-                          no
-                        </td>
-                        <td>
-                          no
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          close
-                        </td>                                                                                                                                                
-                        <td class="text-center">
-                          2020-01-01 00:00:00
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+          <div class="card text-center">
+            <big><h1 class="card-title"> Controlling RED LED </h1></big>
           </div>
-        
+          <div class="card text-right">
+            <button type="button" class="btn btn-success">ON</button>
+            <button type="button" class="btn btn-danger">OFF</button>
+          </div>
+        </div>
+        </div>
+        <div class="card w-75">
+        <div class="row">
+          <div class="card text-center">
+            <big><h1 class="card-title"> Controlling YELLOW LED </h1></big>
+          </div>
+          <div class="card text-right">
+            <button type="button" class="btn btn-success">ON</button>
+            <button type="button" class="btn btn-danger">OFF</button>
+          </div>
+        </div>
+        </div>
+        <div class="card w-75">
+        <div class="row">
+          <div class="card text-center">
+            <big><h1 class="card-title"> Controlling FANS</h1></big>
+          </div>
+          <div class="card text-right">
+            <button type="button" class="btn btn-success">ON</button>
+            <button type="button" class="btn btn-danger">OFF</button>
+          </div>
+        </div>
+        </div>
+        <div class="card w-75">
+        <div class="row">
+          <div class="card text-center">
+            <big><h1 class="card-title"> Controlling LED LIGHT</h1></big>
+          </div>
+          <div class="card text-right">
+            <button type="button" class="btn btn-success">ON</button>
+            <button type="button" class="btn btn-danger">OFF</button>
+          </div>
+        </div>
+        </div>
+        <div class="card w-75">
+        <div class="row">
+          <div class="card text-center">
+            <big><h1 class="card-title"> Controlling FOOD DOOR</h1></big>
+          </div>
+          <div class="card text-right">
+            <button type="button" class="btn btn-success">ON</button>
+            <button type="button" class="btn btn-danger">OFF</button>
+          </div>
+        </div>
         </div>
       </div>
       <footer class="footer">

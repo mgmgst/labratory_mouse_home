@@ -7,7 +7,7 @@
   <link rel="icon" type="image/png" href="static/img/favicon.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    graph
+    adding work
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
   <!--     Fonts and icons     -->
@@ -50,7 +50,7 @@
               <p>ADD DATAS</p>
             </a>
           </li>
-          <li class="active ">
+          <li>
             <a href="table">
               <i class="tim-icons icon-puzzle-10"></i>
               <p>Table List</p>
@@ -62,18 +62,18 @@
               <p>control page</p>
             </a>
           </li>
-          <li>
+          <li class="active ">
             <a href="camera">
               <i class="tim-icons icon-video-66"></i>
               <p>LIVE CAMERA</p>
             </a>
-          </li>                       
+          </li>                      
           <li>
             <a href="doc">
               <i class="tim-icons icon-align-center"></i>
               <p>Documents</p>
             </a>
-          </li>
+          </li>          
         </ul>
       </div>
     </div>
@@ -89,7 +89,7 @@
                 <span class="navbar-toggler-bar bar3"></span>
               </button>
             </div>
-            <a class="navbar-brand" href="#pablo">Table List</a>
+            <a class="navbar-brand" href="#pablo">ADD DATAS</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -99,7 +99,7 @@
           <div class="collapse navbar-collapse" id="navigation">
             <ul class="navbar-nav ml-auto ">
               <li class="dropdown nav-item">
-                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+                <a href="/" class="dropdown-toggle nav-link" data-toggle="dropdown">
                   <div class="photo">
                     <img src="static/img/anime3.png">
                   </div>
@@ -119,20 +119,6 @@
           </div>
         </div>
       </nav>
-      <div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <input type="text" class="form-control" id="inlineFormInputGroup" placeholder="SEARCH">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <i class="tim-icons icon-simple-remove"></i>
-              </button>
-            </div>
-            <div class="modal-footer">
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- End Navbar -->
       <div class="content">
         {% with messages = get_flashed_messages(with_categories=true) %} {% if messages %} {% for category, message in messages %}
@@ -142,155 +128,21 @@
                 <span aria-hidden="true">&times;</span>
                 </button>
                     </div>
-        {% endfor %} {% endif %} {% endwith %}
+        {% endfor %} {% endif %} {% endwith %}      
         <div class="row">
-        <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> ADDED DATAS TABLE</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter " id="">
-                    <thead class=" text-primary">
-                      <th>
-                        temp
-                      </th>
-                      <th>
-                        hum
-                      </th>
-                      <th>
-                        weight
-                      </th>
-                      <th>
-                        hight
-                      </th>
-                      <th>
-                        title
-                      </th>
-                      <th>
-                        name
-                      </th>
-                      <th>
-                        discribtion
-                      </th>
-                      <th class="text-center">
-                        timestamp
-                      </th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          0 'c
-                        </td>
-                        <td>
-                          0 %
-                        </td>
-                        <td>
-                          0 g
-                        </td>
-                        <td>
-                          0 cm
-                        </td>
-                        <td>
-                          mg
-                        </td>
-                        <td>
-                          mg
-                        </td>
-                        <td>
-                          mg
-                        </td>                                                                                                                                                
-                        <td class="text-center">
-                          2020-01-01 00:00:00
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+          <div class="col-md-8">
+            <div class="card">
+              <img class="card-img-top" src="{{ url_for('video_feed') }}">
             </div>
-          </div>        
-          <div class="col-md-12">
-            <div class="card ">
-              <div class="card-header">
-                <h4 class="card-title"> ALL DATAS TABLE</h4>
-              </div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table tablesorter " id="">
-                    <thead class=" text-primary">
-                      <th>
-                        temp
-                      </th>
-                      <th>
-                        hum
-                      </th>
-                      <th>
-                        motion
-                      </th>
-                      <th>
-                        ir switch
-                      </th>
-                      <th>
-                        red led
-                      </th>
-                      <th>
-                        yellow led
-                      </th>
-                      <th>
-                        light
-                      </th>
-                      <th>
-                        fans
-                      </th>                                                                  
-                      <th>
-                        servo
-                      </th>
-                      <th class="text-center">
-                        timestamp
-                      </th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          0 'c
-                        </td>
-                        <td>
-                          0 %
-                        </td>
-                        <td>
-                          no
-                        </td>
-                        <td>
-                          no
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          off
-                        </td>
-                        <td>
-                          close
-                        </td>                                                                                                                                                
-                        <td class="text-center">
-                          2020-01-01 00:00:00
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card  card-user">
+              <div class="card-body "><br><br><br>
+                <big><center><h1 class="card-title"><span id="clock"></span></h1></center></big>
+                <center><p>CURRENT TIME</p></center>
               </div>
             </div>
           </div>
-        
         </div>
       </div>
       <footer class="footer">
@@ -328,7 +180,7 @@
             <span class="badge dark-badge ml-2"></span>
             <span class="color-label">DARK MODE</span>
           </li>
-          <li class="header-title">tihs is table page!</li>
+          <li class="header-title">This is add datas page!</li>
         </ul>
       </div>
     </div>
@@ -458,6 +310,21 @@
         });
       });
     </script>
+    <script>
+    (function () {
+
+      var clockElement = document.getElementById( "clock" );
+
+    function updateClock ( clock ) {
+      clock.innerHTML = new Date().toLocaleTimeString();
+      }
+
+      setInterval(function () {
+        updateClock( clockElement );
+          }, 1000);
+
+          }());
+      </script>
 </body>
 
 </html>
