@@ -7,7 +7,6 @@ import datetime
 import imutils
 import time
 import cv2
-from datetime import datetime
 from time import sleep
 from flask import Flask , render_template,request , redirect,jsonify, flash, url_for, Response, session
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
@@ -15,44 +14,6 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from singlemotiondetector  import SingleMotionDetector
 from imutils.video import VideoStream
-
-def four_point_transform(image, pts):
-        # obtain a consistent order of the points and unpack them
-        # individually
-        rect = order_points(pts)
-        (tl, tr, br, bl) = rect
-
-        # compute the width of the new image, which will be the
-        # maximum distance between bottom-right and bottom-left
-        # x-coordiates or the top-right and top-left x-coordinates
-        widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
-        widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
-        maxWidth = max(int(widthA), int(widthB))
-
-        # compute the height of the new image, which will be the
-        # maximum distance between the top-right and bottom-right
-        # y-coordinates or the top-left and bottom-left y-coordinates
-        heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
-        heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
-        maxHeight = max(int(heightA), int(heightB))
-
-        # now that we have the dimensions of the new image, construct
-        # the set of destination points to obtain a "birds eye view",
-        # (i.e. top-down view) of the image, again specifying points
-        # in the top-left, top-right, bottom-right, and bottom-left
-        # order
-        dst = np.array([
-            [0, 0],
-            [maxWidth - 1, 0],
-            [maxWidth - 1, maxHeight - 1],
-            [0, maxHeight - 1]], dtype = "float32")
-
-        # compute the perspective transform matrix and then apply it
-        M = cv2.getPerspectiveTransform(rect, dst)
-        warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
-
-        # return the warped image
-        return warped
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -112,7 +73,15 @@ def sys_check():
     ret = {'status':'ok','message':'[+] flask server is running'}
     return jsonify(ret) , 200
 
-@app.route('/')
+@app.route('/time_feed')
+def time_feed():
+    def generate():
+        while True:
+            yield datetime.datetime.now().strftime("%Y.%m.%d|%H:%M:%S")
+            time.sleep(1)
+    return Response(generate(), mimetype='text')
+
+@app.route('/',methods=["GET", "POST"])
 @login_required
 def index(): 
     return render_template('dashboard.html')
@@ -128,7 +97,7 @@ def doc():
 def table(): 
     return render_template('tables.html')
 
-@app.route('/add')
+@app.route('/add',methods=["GET", "POST"])
 @login_required
 def userp(): 
     return render_template('add.html')
@@ -151,6 +120,74 @@ def login():
             error = '!!!invalid user!!!' 
                
     return render_template('login.html', error=error)
+
+@app.route("/video_feed")
+def video_feed():
+	# return the response generated along with the specific media
+	# type (mime type)
+	return Response(generate(),
+		mimetype = "multipart/x-mixed-replace; boundary=frame")
+
+def order_points(pts):
+    # initialzie a list of coordinates that will be ordered
+    # such that the first entry in the list is the top-left,
+    # the second entry is the top-right, the third is the
+    # bottom-right, and the fourth is the bottom-left
+    rect = np.zeros((4, 2), dtype = "float32")
+
+    # the top-left point will have the smallest sum, whereas
+    # the bottom-right point will have the largest sum
+    s = pts.sum(axis = 1)
+    rect[0] = pts[np.argmin(s)]
+    rect[2] = pts[np.argmax(s)]
+
+    # now, compute the difference between the points, the
+    # top-right point will have the smallest difference,
+    # whereas the bottom-left will have the largest difference
+    diff = np.diff(pts, axis = 1)
+    rect[1] = pts[np.argmin(diff)]
+    rect[3] = pts[np.argmax(diff)]
+
+    # return the ordered coordinates
+    return rect
+
+def four_point_transform(image, pts):
+    # obtain a consistent order of the points and unpack them
+    # individually
+    rect = order_points(pts)
+    (tl, tr, br, bl) = rect
+
+    # compute the width of the new image, which will be the
+    # maximum distance between bottom-right and bottom-left
+    # x-coordiates or the top-right and top-left x-coordinates
+    widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
+    widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
+    maxWidth = max(int(widthA), int(widthB))
+
+    # compute the height of the new image, which will be the
+    # maximum distance between the top-right and bottom-right
+    # y-coordinates or the top-left and bottom-left y-coordinates
+    heightA = np.sqrt(((tr[0] - br[0]) ** 2) + ((tr[1] - br[1]) ** 2))
+    heightB = np.sqrt(((tl[0] - bl[0]) ** 2) + ((tl[1] - bl[1]) ** 2))
+    maxHeight = max(int(heightA), int(heightB))
+
+    # now that we have the dimensions of the new image, construct
+    # the set of destination points to obtain a "birds eye view",
+    # (i.e. top-down view) of the image, again specifying points
+    # in the top-left, top-right, bottom-right, and bottom-left
+    # order
+    dst = np.array([
+        [0, 0],
+        [maxWidth - 1, 0],
+        [maxWidth - 1, maxHeight - 1],
+        [0, maxHeight - 1]], dtype = "float32")
+
+    # compute the perspective transform matrix and then apply it
+    M = cv2.getPerspectiveTransform(rect, dst)
+    warped = cv2.warpPerspective(image, M, (maxWidth, maxHeight))
+
+    # return the warped image
+    return warped
 
 def check(username,password):
     res = False
@@ -222,16 +259,10 @@ def generate():
 		# yield the output frame in the byte format
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
 			bytearray(encodedImage) + b'\r\n')
-
-@app.route("/video_feed")
-def video_feed():
-	# return the response generated along with the specific media
-	# type (mime type)
-	return Response(generate(),
-		mimetype = "multipart/x-mixed-replace; boundary=frame")
-
+			
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
+    	
 	# construct the argument parser and parse command line arguments
 	ap = argparse.ArgumentParser()
 	ap.add_argument("-i", "--ip", type=str, required=True,
@@ -241,13 +272,16 @@ if __name__ == '__main__':
 	ap.add_argument("-f", "--frame-count", type=int, default=32,
 		help="# of frames used to construct the background model")
 	args = vars(ap.parse_args())
+
 	# start a thread that will perform motion detection
 	t = threading.Thread(target=detect_motion, args=(
 		args["frame_count"],))
 	t.daemon = True
 	t.start()
+
 	# start the flask app  
 	app.run(host=args["ip"], port=args["port"], debug=True,
 		threaded=True, use_reloader=False)
+
 # release the video stream pointer
 vs.stop()
