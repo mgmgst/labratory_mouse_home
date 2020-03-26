@@ -19,7 +19,7 @@ authors : mohammad gharehbagh && sohil shoravarzi
 - [x] make pre layout balsamic design for gui its the end of it just continue it.
 - [x] make graphical user interface for showing results and charts desktop app or website web service
 - [x] add four top pre designed pages in balsamic mokup to flask then work on backend of project
-- [ ] continue work on gui and codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
+- [ ] continue work on gui (frontend and backend) and codeing in both arduino and python codes and coninue makeing the electrical parts and mechanical parts (electrival kits and case for all project + mouse holders)
 - [ ] recording all (test) and (on way makeing and ...) for this project
 - [ ] recordeing the voice of meets that i have with (sohil) for all parts of project
 - [ ] writeing assay for result of electromagnetic fields on human and live creaters
