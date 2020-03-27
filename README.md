@@ -62,9 +62,9 @@ Every single step of this project is screen captures and you can follow them [On
 ### make mysql server for project
 1. run this comand in MYSQL database : `CREATE DATABASE alldatas;`
 
-2. run this comand in MYSQL database : `CREATE USER 'alldatas'@'localhost' IDENTIFIED BY 'test';`
+2. run this comand in MYSQL database : `CREATE USER 'nativeuserme'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';`
 
-3. run this comand in MYSQL database : `GRANT ALL PRIVILEGES ON alldatas.* TO 'alldatas'@'localhost';`
+3. run this comand in MYSQL database : `GRANT ALL PRIVILEGES ON alldatas* TO 'nativeuserme'@'localhost';`
 
 4. run this comand in MYSQL database : `DROP TABLE IF EXISTS ledstatus;`
 
@@ -93,3 +93,7 @@ Every single step of this project is screen captures and you can follow them [On
 16. run this comand in MYSQL database : `DROP TABLE IF EXISTS alldatasstatus;`
 
 17. run this comand in MYSQL database : `CREATE TABLE alldatasstatus (hum VARCHAR(30),temp VARCHAR(30),motion VARCHAR(30),switch VARCHAR(30),redled VARCHAR(30),yellowled VARCHAR(30),light VARCHAR(30),fans VARCHAR(30),servostatus VARCHAR(30),timestamp  TIMESTAMP);`
+
+18. run this comand in MYSQL database : `DROP TABLE IF EXISTS allwritedatasstatus;`
+
+19. run this comand in MYSQL database : `CREATE TABLE allwritedatasstatus (title VARCHAR(60),name VARCHAR(30),weight VARCHAR(30),hight VARCHAR(30),temp VARCHAR(30),Score VARCHAR(30),discr VARCHAR(256),time  TIMESTAMP);`

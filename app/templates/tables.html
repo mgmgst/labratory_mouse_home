@@ -144,42 +144,11 @@
                     </div>
         {% endfor %} {% endif %} {% endwith %}
         <div class="row">
-          <div class="col-lg-4">
+          <div class="col-md-12">
             <div class="card card-chart">
               <div class="card-header ">
                 <h4 class="card-title">NEWEST ONE</h4>
-
-              </div>
-              <div class="card-body ">
-                <div class="table-responsive">
-                  <table class="table tablesorter " id="">
-                    <thead class=" text-primary">
-                      <th>
-                        weight
-                      </th>
-                      <th class="text-center">
-                        timestamp
-                      </th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>
-                          0 g
-                        </td>                                                                                                                                                
-                        <td class="text-center">
-                          2020-01-01 00:00:00
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>                
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="card card-chart">
-              <div class="card-header ">
-                <h4 class="card-title">NEWEST ONE</h4>
+                <h2 class="card-title">Hight and Wight : </h2>
               </div>
               <div class="card-body ">
                 <div class="table-responsive">
@@ -187,32 +156,41 @@
                     <thead class=" text-primary">
                       <th>
                         hight
-                      </th>
+                      </th>                      
+                      <th>
+                        weight
+                      </th>                      
                       <th class="text-center">
                         timestamp
                       </th>
                     </thead>
                     <tbody>
+                      {% for work in data.latestworks %}
                       <tr>
                         <td>
-                          0 cm
+                          {{work.latesthight}} cm
+                        </td> 
+                        <td>
+                          {{work.latestweight}} g
                         </td>                                                                                                                                               
                         <td class="text-center">
-                          2020-01-01 00:00:00
+                          {{work.latesttime}}
                         </td>
                       </tr>
+                      {% endfor %}                      
                     </tbody>
-                  </table>
+                  </table>                
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-4">
+          <div class="col-md-12">
             <div class="card card-chart">
               <div class="card-header ">
                 <div class="row">
                   <div class="col-sm-6 text-left">
                     <h4 class="card-title">NEWEST ONE</h4>
+                    <h2 class="card-title">Temperarture and Humadity : </h2>
                   </div>
                 </div>
               </div>
@@ -239,7 +217,7 @@
                           0 %
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          2020-01-01 00:00:00
+                          0000-00-00 00:00:00
                         </td>
                       </tr>
                     </tbody>
@@ -263,7 +241,7 @@
                         temp
                       </th>
                       <th>
-                        hum
+                        score
                       </th>
                       <th>
                         weight
@@ -284,33 +262,35 @@
                         timestamp
                       </th>
                     </thead>
-                    <tbody>
+                    <tbody>                  
+                      {% for work in data.works %}
                       <tr>
                         <td>
-                          0 'c
+                          {{work.temp}} 'c
                         </td>
                         <td>
-                          0 %
+                          {{work.Score}}
                         </td>
                         <td>
-                          0 g
+                          {{work.weight}} g
                         </td>
                         <td>
-                          0 cm
+                          {{work.hight}} cm
                         </td>
                         <td>
-                          mg
+                          {{work.title}}
                         </td>
                         <td>
-                          mg
+                          {{work.name}}
                         </td>
                         <td>
-                          mg
+                          {{work.discr}}
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          2020-01-01 00:00:00
+                          {{work.time}}
                         </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>
@@ -387,7 +367,7 @@
                           close
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          2020-01-01 00:00:00
+                          0000-00-00 00:00:00
                         </td>
                       </tr>
                     </tbody>

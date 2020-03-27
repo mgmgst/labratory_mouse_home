@@ -1,5 +1,4 @@
 # start includeing librarys that we need for work
-import server_manage
 import requests
 import mysql.connector
 import threading
@@ -16,7 +15,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from singlemotiondetector  import SingleMotionDetector
 from imutils.video import VideoStream
-# start includeing librarys that we need for work
+# end includeing librarys that we need for work
 
 # initialize the output frame and a lock used to ensure thread-safe
 # exchanges of the output frames (useful when multiple browsers/tabs
@@ -92,7 +91,14 @@ def time_feed():
 @login_required
 def index():
     '''this function handle main page''' 
-    return render_template('dashboard.html')
+
+    latestwork = reading_latestwritedatas_to_database()
+    latestworka=[]
+    for last in latestwork:
+        title, name, weight, hight, temp, Score, discr, time = last
+        latestworka.append({"title":title,"name":name,"weight":weight,"hight":hight,"temp":temp,"Score":Score,"discr":discr,"time":time})
+    
+    return render_template('dashboard.html', data = {"latestworks" : latestworka})
 
 # documentation route for flask server
 @app.route('/doc')
@@ -106,7 +112,20 @@ def doc():
 @login_required
 def table(): 
     '''this function handle tables page for request comeing for this route'''
-    return render_template('tables.html')
+
+    all_work = reading_writedatas_to_database()
+    works = []
+    for work in all_work:
+        title, name, weight, hight, temp, Score, discr, time = work
+        works.append({"title":title,"name":name,"weight":weight,"hight":hight,"temp":temp,"Score":Score,"discr":discr,"time":time})
+
+    latestwork = reading_latestwritedatas_to_database()
+    latestworka=[]
+    for last in latestwork:
+        latesttitle, latestname, latestweight, latesthight, latesttemp, latestScore, latestdiscr, latesttime = last
+        latestworka.append({"latesttitle":latesttitle,"latestname":latestname,"latestweight":latestweight,"latesthight":latesthight,"latesttemp":latesttemp,"latestScore":latestScore,"latestdiscr":latestdiscr,"latesttime":latesttime})
+
+    return render_template('tables.html', data = {"works" : works, "latestworks" : latestworka})
 
 # control devices page route for flask server
 @app.route('/control')
@@ -125,9 +144,28 @@ def camera_Page():
 # add datas page route for flask server and url methods ar post and get
 @app.route('/add',methods=["GET", "POST"])
 @login_required
-def userp(): 
+def add(): 
     '''this function handle add datas page for request comeing for this route'''
-    return render_template('add.html')
+
+    if request.method == 'POST':
+
+        title = request.form["title"]
+        name = request.form["name"]
+        weight = request.form["weight"]
+        hight = request.form["hight"]
+        temp = request.form["temp"]
+        Score = request.form["Score"]
+        discr = request.form["discr"]
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        writing_writedatas_to_database(title, name, weight, hight, temp, Score, discr, timestamp)
+
+        flash('your information added seccussfully','info')
+
+        return redirect('/')        
+
+    else:
+        return render_template('add.html')
 
 # login route for flask server that have limmiter (10 times) for stop brute force attaks and have check and its methods are posta nd get           
 @app.route('/login',methods=["GET", "POST"])
@@ -287,7 +325,361 @@ def generate():
 		# yield the output frame in the byte format
 		yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + 
 			bytearray(encodedImage) + b'\r\n')
-			
+
+def getalldatas():
+    '''this function get all datas by one json code and store them into mysql database in each seprate tables and in one great table'''
+
+    url = 'http://10.10.10.1/jsond'
+    respon = requests.get(url)
+    
+    hum = respon.json()['humadity']
+    temp = respon.json()['temperature']
+    motion = respon.json()['motion']
+    switch = respon.json()['switch']
+    redled = respon.json()['redled']
+    yellowled = respon.json()['yellowled']
+    light = respon.json()['light']
+    fans = respon.json()['fans']
+    servostatus = respon.json()["servo"]
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    writing_dhtstatus_to_database(hum, temp, timestamp)
+    writing_pirstatus_to_database(motion, timestamp)
+    writing_irstatus_to_database(switch, timestamp)
+    writing_ledstatus_to_database(redled, yellowled, timestamp)
+    writing_relaystatus_to_database(light, fans, timestamp)
+    writing_servostatus_to_database(servostatus, timestamp)
+
+    writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp)
+
+    return hum, temp, motion, switch, redled, yellowled, light, fans, servostatus
+
+def getroomstatus():
+    '''this function read room temperature and humadity'''
+
+    url = 'http://10.10.10.1/readroomddata'
+    respon = requests.get(url)
+    hum = respon.json()['humadity']
+    temp = respon.json()['temperature']
+
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    writing_dhtstatus_to_database(hum, temp, timestamp)
+
+    return temp, hum
+
+def getpirstatus():
+    '''this function read human motion detect in work place'''
+
+    url = 'http://10.10.10.1/readpirdata'
+    respon = requests.get(url)
+    motion = respon.json()['motion']
+    
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    writing_pirstatus_to_database(motion,timestamp)
+
+    return motion
+
+def getirstatus():
+    '''this function read food switch status in work place'''
+
+    url = 'http://10.10.10.1/readirdata'
+    respon = requests.get(url)
+    switch = respon.json()['switch']
+    
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    
+    writing_irstatus_to_database(switch,timestamp)
+
+    return switch
+
+def ledcontrol(led,status):
+    '''this function can control showing bar status leds'''
+
+    if ledcheck(led,status):
+        url = f'http://10.10.10.1/control_led?{led}={status}'
+        respon = requests.get(url)
+        redled = respon.json()['redled']
+        yellowled = respon.json()['yellowled']
+        
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        writing_ledstatus_to_database(redled,yellowled,timestamp)
+        
+        return redled, yellowled
+    
+    else:
+        return 'your givin elements is not true'
+
+def relaycontrol(relaypin, status):
+    '''this function can control relays that control lights and fans'''
+    
+    if relaycheck(relaypin,status):
+        url = f'http://10.10.10.1/control_relay?{relaypin}={status}'
+        respon = requests.get(url)
+
+        stuffs = {'light' : respon.json()['light'],
+        'fans' : respon.json()['fans'],}
+        
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        writing_relaystatus_to_database(stuffs['light'],stuffs['fans'],timestamp)
+
+        return stuffs
+    else:
+        return 'your givin elements is not true'
+
+def servocontrol(servo, status):
+    '''this function can control servo that control food door'''
+    
+    if relaycheck(servo,status):
+        url = f'http://10.10.10.1/control_servo?{servo}={status}'
+        respon = requests.get(url)
+
+        servostatus = respon.json()["servo"]
+        
+        timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        
+        writing_servostatus_to_database(servostatus,timestamp)
+
+        return servostatus
+    else:
+        return 'your givin elements is not true'
+
+def logoutarduino():
+    '''this function logout from server'''
+
+    url = "http://10.10.10.1/login?DISCONNECT=YES"    
+    respon = requests.get(url)
+
+    return respon
+    
+def loginarduino():
+    '''this function login into server'''
+
+    username = 'mgmgst'
+    password = '1051154731'
+    url = f'http://10.10.10.1/login?USERNAME={username}&PASSWORD={password}'
+    session = requests.session()
+    respon = session.get(url)
+    
+    if respon.status_code == 200:
+        return session
+    
+    else:
+        return f'can not login error : {respon.status_code}'
+            
+def ledcheck(led,status):
+    '''this function check that we send right data for controling status led light bars or not'''
+
+    ret = False
+    leds = ['ledred' , 'ledyellow' ,'all']
+    statuss = ['on' , 'off']
+    if led in leds and status in statuss:
+        ret = True
+        
+    return ret
+
+def relaycheck(relaypin, status):
+    '''this function check that we send right data for controling relays that they control power stuff or not'''
+    ''' in this function relay1 == light & relay2 == fans '''
+
+    ret = False
+    relays = ['light', 'fans']
+    statuss = ['on', 'off']
+    if relaypin in relays and status in statuss:
+        ret = True
+        
+    return ret
+
+def servocheck(servo, status):
+    '''this function check that we send right data for controling servo that control food door'''
+
+    ret = False
+    servop = "servo"
+    statuss = ['open', 'close']
+    if servo == servop and status in statuss:
+        ret = True
+        
+    return ret
+
+def connect_to_database():
+    '''this function make connection to mysql service'''
+
+    db = mysql.connector.connect(
+        host="localhost",
+        user="nativeuserme",
+        passwd="password",
+        db="alldatas",
+        charset="utf8",
+        auth_plugin='mysql_native_password'
+    )
+
+    return db
+
+def reading_ledstatus_from_database():
+    '''this function read ledstatuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM ledstatus;")
+    db.close()
+    return cur.fetchall()
+
+def reading_relaystatus_from_database():
+    '''this function read relaystatuss from mysql database from  past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM relaystatus;")
+    db.close()
+    return cur.fetchall()
+
+def reading_servostatus_from_database():
+    '''this function read servostatus from mysql database from  past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM servostatus;")
+    db.close()
+    return cur.fetchall()
+
+def reading_pirstatus_from_database():
+    '''this function read pirstatuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM pirstatus;")
+    db.close()
+    return cur.fetchall()
+
+def reading_irstatus_from_database():
+    '''this function read irstatuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM irstatus;")
+    db.close()
+    return cur.fetchall()
+
+def reading_dhtstatus_from_database():
+    '''this function read dhtstatuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM dhtstatus;")
+    db.close()
+    return cur.fetchall()            
+
+def reading_alldatas_to_database():
+    '''this function read alldatas statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM alldatasstatus;")
+    db.close()
+    return cur.fetchall() 
+
+def reading_writedatas_to_database():
+    '''this function read allwritedatas statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM allwritedatasstatus;")
+    db.close()
+    return cur.fetchall()         
+
+def reading_latestwritedatas_to_database():
+    '''this function read alllatestwritedatas statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM allwritedatasstatus ORDER BY time DESC LIMIT 1;")
+    db.close()
+    return cur.fetchall()
+
+def writing_ledstatus_to_database(redled, yellowled, timestamp):
+    '''this function write collected ledstatuss to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO ledstatus VALUES ("{redled}","{yellowled}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+
+def writing_relaystatus_to_database(light, fans, timestamp):
+    '''this function write collected relaystatuss to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO relaystatus VALUES ("{light}","{fans}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+
+def writing_servostatus_to_database(servostatus,timestamp):
+    '''this function write collected servostatus to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO servostatus VALUES ("{servostatus}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
+
+def writing_pirstatus_to_database(motion,timestamp):
+    '''this function write collected pirstatuss to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO pirstatus VALUES ("{motion}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+
+def writing_irstatus_to_database(switch,timestamp):
+    ''' this function write collected irstatuss to mysql databse with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO irstatus VALUES ("{switch}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
+
+def writing_dhtstatus_to_database(hum, temp, timestamp):
+    '''this function write collected dhtstatuss to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO dhtstatus VALUES ("{hum}","{temp}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()    
+
+def writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp):
+    '''this function write all collected datas to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO alldatasstatus VALUES ("{hum}","{temp}","{motion}","{switch}","{redled}","{yellowled}","{light}","{fans}","{servostatus}","{timestamp}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+
+def writing_writedatas_to_database(title, name, weight, hight, temp, Score, discr, time):
+    '''this function write all collected datas to mysql database with timestamp'''
+
+    db = connect_to_database()    
+    cur = db.cursor()
+    qury = f'INSERT INTO allwritedatasstatus VALUES ("{title}","{name}","{weight}","{hight}","{temp}","{Score}","{discr}","{time}");'
+    cur.execute(qury)
+    db.commit()
+    db.close()
+
+
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
     	
