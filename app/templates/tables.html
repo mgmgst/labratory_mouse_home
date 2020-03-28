@@ -148,7 +148,7 @@
             <div class="card card-chart">
               <div class="card-header ">
                 <h4 class="card-title">NEWEST ONE</h4>
-                <h2 class="card-title">Hight and Wight : </h2>
+                <h3 class="card-title"> COLLECTED DATAS :  </h3>
               </div>
               <div class="card-body ">
                 <div class="table-responsive">
@@ -159,7 +159,13 @@
                       </th>                      
                       <th>
                         weight
-                      </th>                      
+                      </th>
+                      <th>
+                        BODY Temp
+                      </th>
+                      <th>
+                        EXAMS Score
+                      </th>                                            
                       <th class="text-center">
                         timestamp
                       </th>
@@ -176,6 +182,12 @@
                         <td class="text-center">
                           {{work.latesttime}}
                         </td>
+                        <td>
+                          {{work.latesttemp}} cm
+                        </td> 
+                        <td>
+                          {{work.latestScore}} g
+                        </td>                        
                       </tr>
                       {% endfor %}                      
                     </tbody>
