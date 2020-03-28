@@ -143,14 +143,15 @@
                 </button>
                     </div>
         {% endfor %} {% endif %} {% endwith %}      
+    <form action="" method="POST">
         <div class="card w-75">
         <div class="row">
           <div class="card text-center">
             <big><h1 class="card-title"> Controlling RED LED </h1></big>
           </div>
           <div class="card text-right">
-            <button type="button" class="btn btn-success">ON</button>
-            <button type="button" class="btn btn-danger">OFF</button>
+            <button type="submit" class="btn btn-success" value="RED_ON" name="REDLED" id="REDLED">ON</button>
+            <button type="submit" class="btn btn-danger" value="RED_OFF" name="REDLED" id="REDLED">OFF</button>
           </div>
         </div>
         </div>
@@ -160,8 +161,8 @@
             <big><h1 class="card-title"> Controlling YELLOW LED </h1></big>
           </div>
           <div class="card text-right">
-            <button type="button" class="btn btn-success">ON</button>
-            <button type="button" class="btn btn-danger">OFF</button>
+            <button type="submit" class="btn btn-success" value="YELLOW_ON" name="YELLOWLED" id="YELLOWLED">ON</button>
+            <button type="submit" class="btn btn-danger" value="YELLOW_OFF" name="YELLOWLED" id="YELLOWLED">OFF</button>
           </div>
         </div>
         </div>
@@ -171,8 +172,8 @@
             <big><h1 class="card-title"> Controlling FANS</h1></big>
           </div>
           <div class="card text-right">
-            <button type="button" class="btn btn-success">ON</button>
-            <button type="button" class="btn btn-danger">OFF</button>
+            <button type="submit" class="btn btn-success" value="FANS_ON" name="FANS" id="FANS">ON</button>
+            <button type="submit" class="btn btn-danger" value="FANS_OFF" name="FANS" id="FANS">OFF</button>
           </div>
         </div>
         </div>
@@ -182,8 +183,8 @@
             <big><h1 class="card-title"> Controlling LED LIGHT</h1></big>
           </div>
           <div class="card text-right">
-            <button type="button" class="btn btn-success">ON</button>
-            <button type="button" class="btn btn-danger">OFF</button>
+            <button type="submit" class="btn btn-success" value="LIGHT_ON" name="LIGHT" id="LIGHT">ON</button>
+            <button type="submit" class="btn btn-danger" value="LIGHT_OFF" name="LIGHT" id="LIGHT">OFF</button>
           </div>
         </div>
         </div>
@@ -193,12 +194,13 @@
             <big><h1 class="card-title"> Controlling FOOD DOOR</h1></big>
           </div>
           <div class="card text-right">
-            <button type="button" class="btn btn-success">ON</button>
-            <button type="button" class="btn btn-danger">OFF</button>
+            <button type="submit" class="btn btn-success" value="DOOR_OPEN" name="DOOR" id="DOOR">OPEN</button>
+            <button type="submit" class="btn btn-danger" value="DOOR_CLOSE" name="DOOR" id="DOOR">CLOSE</button>
           </div>
         </div>
         </div>
       </div>
+    </form>
       <footer class="footer">
         <div class="container-fluid">
           <div class="copyright float-right">

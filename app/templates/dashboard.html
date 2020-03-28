@@ -169,17 +169,19 @@
                       </th>
                     </thead>
                     <tbody>
+                      {% for ldht in data.latestdhts %}
                       <tr>
                         <td>
-                          0 'c
+                          {{ldht.temp}} 'c
                         </td>
                         <td>
-                          0 %
+                          {{ldht.hum}} %
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          0000-00-00 00:00:00
+                          {{ldht.timestamp}}
                         </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>
@@ -229,38 +231,40 @@
                       </th>
                     </thead>
                     <tbody>
+                      {% for datad in data.datas %}
                       <tr>
                         <td>
-                          0 'c
+                          {{datad.temp}} 'c
                         </td>
                         <td>
-                          0 %
+                          {{datad.hum}} %
                         </td>
                         <td>
-                          no
+                          {{datad.motion}}
                         </td>
                         <td>
-                          no
+                          {{datad.switch}}
                         </td>
                         <td>
-                          off
+                          {{datad.redled}}
                         </td>
                         <td>
-                          off
+                          {{datad.yellowled}}
                         </td>
                         <td>
-                          off
+                          {{datad.light}}
                         </td>
                         <td>
-                          off
+                          {{datad.fans}}
                         </td>
                         <td>
-                          close
+                          {{datad.servostatus}}
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          0000-00-00 00:00:00
+                          {{datad.timestamp}}
                         </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>
@@ -321,14 +325,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-lg-6 col-md-12">
-            <div class="card card-tasks">
-              <div class="card-body ">
-                    <h2>system logs : </h2>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6 col-md-12">
+          <div class="col-12">
             <div class="card">
               <div class="card-header ">
                 <img class="card-img-top" src="{{ url_for('video_feed') }}">

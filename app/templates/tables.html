@@ -178,15 +178,15 @@
                         </td> 
                         <td>
                           {{work.latestweight}} g
-                        </td>                                                                                                                                               
-                        <td class="text-center">
-                          {{work.latesttime}}
                         </td>
                         <td>
                           {{work.latesttemp}} cm
                         </td> 
                         <td>
                           {{work.latestScore}} g
+                        </td>                                                                                                                                                                       
+                        <td class="text-center">
+                          {{work.latesttime}}
                         </td>                        
                       </tr>
                       {% endfor %}                      
@@ -221,17 +221,19 @@
                       </th>
                     </thead>
                     <tbody>
+                      {% for ldht in data.latestdhts %}
                       <tr>
                         <td>
-                          0 'c
+                          {{ldht.temp}} 'c
                         </td>
                         <td>
-                          0 %
+                          {{ldht.hum}} %
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          0000-00-00 00:00:00
+                          {{ldht.timestamp}}
                         </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>
@@ -350,38 +352,40 @@
                       </th>
                     </thead>
                     <tbody>
+                      {% for datad in data.datas %}
                       <tr>
                         <td>
-                          0 'c
+                          {{datad.temp}} 'c
                         </td>
                         <td>
-                          0 %
+                          {{datad.hum}} %
                         </td>
                         <td>
-                          no
+                          {{datad.motion}}
                         </td>
                         <td>
-                          no
+                          {{datad.switch}}
                         </td>
                         <td>
-                          off
+                          {{datad.redled}}
                         </td>
                         <td>
-                          off
+                          {{datad.yellowled}}
                         </td>
                         <td>
-                          off
+                          {{datad.light}}
                         </td>
                         <td>
-                          off
+                          {{datad.fans}}
                         </td>
                         <td>
-                          close
+                          {{datad.servostatus}}
                         </td>                                                                                                                                                
                         <td class="text-center">
-                          0000-00-00 00:00:00
+                          {{datad.timestamp}}
                         </td>
                       </tr>
+                      {% endfor %}
                     </tbody>
                   </table>
                 </div>

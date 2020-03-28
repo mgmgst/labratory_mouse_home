@@ -98,7 +98,19 @@ def index():
         title, name, weight, hight, temp, Score, discr, time = last
         latestworka.append({"title":title,"name":name,"weight":weight,"hight":hight,"temp":temp,"Score":Score,"discr":discr,"time":time})
     
-    return render_template('dashboard.html', data = {"latestworks" : latestworka})
+    latestdht = reading_latestdhtstatus_to_database()
+    latestdhts =[]
+    for dht in latestdht:
+        hum, temp, timestamp = dht
+        latestdhts.append({"hum":hum,"temp":temp,"timestamp":timestamp})
+
+    latestdata = reading_alllatestdatas_to_database()
+    datas = []
+    for data in latestdata:
+        hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp = data
+        datas.append({"hum":hum,"temp":temp,"motion":motion,"switch":switch,"redled":redled,"yellowled":yellowled,"light":light,"fans":fans,"servostatus":servostatus,"timestamp":timestamp})
+
+    return render_template('dashboard.html', data = {"latestworks" : latestworka, "latestdhts":latestdhts, "datas" : datas})
 
 # documentation route for flask server
 @app.route('/doc')
@@ -125,13 +137,97 @@ def table():
         latesttitle, latestname, latestweight, latesthight, latesttemp, latestScore, latestdiscr, latesttime = last
         latestworka.append({"latesttitle":latesttitle,"latestname":latestname,"latestweight":latestweight,"latesthight":latesthight,"latesttemp":latesttemp,"latestScore":latestScore,"latestdiscr":latestdiscr,"latesttime":latesttime})
 
-    return render_template('tables.html', data = {"works" : works, "latestworks" : latestworka})
+    alldatas = reading_alldatas_to_database()
+    datas = []
+    for data in alldatas:
+        hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp = data
+        datas.append({"hum":hum,"temp":temp,"motion":motion,"switch":switch,"redled":redled,"yellowled":yellowled,"light":light,"fans":fans,"servostatus":servostatus,"timestamp":timestamp})
+
+
+    latestdht = reading_latestdhtstatus_to_database()
+    latestdhts =[]
+    for dht in latestdht:
+        hum, temp, timestamp = dht
+        latestdhts.append({"hum":hum,"temp":temp,"timestamp":timestamp})
+
+    return render_template('tables.html', data = {"works" : works, "latestworks" : latestworka, "datas" : datas, "latestdhts":latestdhts})
 
 # control devices page route for flask server
-@app.route('/control')
+@app.route('/control', methods=["GET", "POST"])
 @login_required
 def control_Page(): 
     '''this function handle control page for request comeing for this route'''
+
+    if request.method == 'POST':
+
+        REDLED = request.form["REDLED"]
+        YELLOWLED = request.form["YELLOWLED"]
+        FANS = request.form["FANS"]
+        LIGHT = request.form["LIGHT"]
+        DOOR = request.form["DOOR"]
+
+        if REDLED == "RED_ON":
+
+            ledcontrol("ledred","on")
+            getalldatas()
+            flash("DONE.")
+
+        if REDLED == "RED_OFF":
+    
+            ledcontrol("ledred","off")
+            getalldatas()
+            flash("DONE.")
+
+        if YELLOWLED == "YELLOW_ON":
+    
+            ledcontrol("ledyellow","on")
+            getalldatas()
+            flash("DONE.")
+
+        if YELLOWLED == "YELLOW_OFF":
+    
+            ledcontrol("ledyellow","off")
+            getalldatas()
+            flash("DONE.")
+
+        if FANS == "FANS_ON":
+    
+            relaycontrol("fans","on")
+            getalldatas()
+            flash("DONE.")
+
+        if FANS == "FANS_OFF":
+    
+            relaycontrol("fans","off")
+            getalldatas()
+            flash("DONE.")
+
+        if LIGHT == "LIGHT_ON":
+    
+            relaycontrol("light","on")
+            getalldatas()
+            flash("DONE.")
+
+        if LIGHT == "LIGHT_OFF":
+    
+            relaycontrol("light","off")
+            getalldatas()
+            flash("DONE.")                                                                        
+
+        if DOOR == "DOOR_OPEN":
+        
+            servocontrol("servo","open")
+            getalldatas()
+            flash("DONE.")
+
+        if DOOR == "DOOR_CLOSE":
+    
+            servocontrol("servo","close")
+            getalldatas()
+            flash("DONE.")
+
+        return redirect('/control')
+
     return render_template('control_Page.html')
 
 # live camera page route for flask server
@@ -433,7 +529,7 @@ def relaycontrol(relaypin, status):
 def servocontrol(servo, status):
     '''this function can control servo that control food door'''
     
-    if relaycheck(servo,status):
+    if servocheck(servo,status):
         url = f'http://10.10.10.1/control_servo?{servo}={status}'
         respon = requests.get(url)
 
@@ -581,6 +677,15 @@ def reading_alldatas_to_database():
     db.close()
     return cur.fetchall() 
 
+def reading_alllatestdatas_to_database():
+    '''this function read alllatestdatas statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM alldatasstatus ORDER BY timestamp DESC LIMIT 1;")
+    db.close()
+    return cur.fetchall() 
+
 def reading_writedatas_to_database():
     '''this function read allwritedatas statuss from mysql database from past to today and return them'''
 
@@ -596,6 +701,15 @@ def reading_latestwritedatas_to_database():
     db = connect_to_database()
     cur = db.cursor()
     cur.execute("SELECT * FROM allwritedatasstatus ORDER BY time DESC LIMIT 1;")
+    db.close()
+    return cur.fetchall()
+
+def reading_latestdhtstatus_to_database():
+    '''this function read latestdhtstatus statuss from mysql database from past to today and return them'''
+
+    db = connect_to_database()
+    cur = db.cursor()
+    cur.execute("SELECT * FROM dhtstatus ORDER BY timestamp DESC LIMIT 1;")
     db.close()
     return cur.fetchall()
 
@@ -679,6 +793,10 @@ def writing_writedatas_to_database(title, name, weight, hight, temp, Score, disc
     db.commit()
     db.close()
 
+def read_datas_every_S():
+    while True:
+        getalldatas()
+        time.sleep(1)
 
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
@@ -700,8 +818,7 @@ if __name__ == '__main__':
 	t.start()
 
 	# start the flask app  
-	app.run(host=args["ip"], port=args["port"], debug=True,
-		threaded=True, use_reloader=False)
+	app.run(host=args["ip"], port=args["port"], debug=True, threaded=True, use_reloader=False);
 
 # release the video stream pointer
 vs.stop()
