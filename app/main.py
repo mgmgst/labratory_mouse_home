@@ -269,7 +269,9 @@ def add():
 @app.route('/login',methods=["GET", "POST"])
 @limiter.limit("10 per minute")
 def login():
-    #subprocess.Popen(["python", "collect.py"])
+
+    # subprocess.Popen(["python", "collect.py"])  TODO: uncomment this line when i wana deploy project done.
+
     '''this function return login page'''
     error = None
     if current_user.is_authenticated:
