@@ -1,4 +1,5 @@
 # start includeing librarys that we need for work
+import subprocess
 import requests
 import mysql.connector
 import threading
@@ -15,6 +16,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 from singlemotiondetector  import SingleMotionDetector
 from imutils.video import VideoStream
+import collect, config, mysqlmanager
 # end includeing librarys that we need for work
 
 # initialize the output frame and a lock used to ensure thread-safe
@@ -31,7 +33,7 @@ app = Flask(__name__)
 
 # config flask secret key
 app.config.update(
-    SECRET_KEY = "secretxxx"
+    SECRET_KEY = config.SECRET_KEY #"secretxxx"
 )
 
 # config flask limmiter
@@ -92,19 +94,19 @@ def time_feed():
 def index():
     '''this function handle main page''' 
 
-    latestwork = reading_latestwritedatas_to_database()
+    latestwork = mysqlmanager.reading_latestwritedatas_to_database()
     latestworka=[]
     for last in latestwork:
         title, name, weight, hight, temp, Score, discr, time = last
         latestworka.append({"title":title,"name":name,"weight":weight,"hight":hight,"temp":temp,"Score":Score,"discr":discr,"time":time})
     
-    latestdht = reading_latestdhtstatus_to_database()
+    latestdht = mysqlmanager.reading_latestdhtstatus_to_database()
     latestdhts =[]
     for dht in latestdht:
         hum, temp, timestamp = dht
         latestdhts.append({"hum":hum,"temp":temp,"timestamp":timestamp})
 
-    latestdata = reading_alllatestdatas_to_database()
+    latestdata = mysqlmanager.reading_alllatestdatas_to_database()
     datas = []
     for data in latestdata:
         hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp = data
@@ -125,26 +127,26 @@ def doc():
 def table(): 
     '''this function handle tables page for request comeing for this route'''
 
-    all_work = reading_writedatas_to_database()
+    all_work = mysqlmanager.reading_writedatas_to_database()
     works = []
     for work in all_work:
         title, name, weight, hight, temp, Score, discr, time = work
         works.append({"title":title,"name":name,"weight":weight,"hight":hight,"temp":temp,"Score":Score,"discr":discr,"time":time})
 
-    latestwork = reading_latestwritedatas_to_database()
+    latestwork = mysqlmanager.reading_latestwritedatas_to_database()
     latestworka=[]
     for last in latestwork:
         latesttitle, latestname, latestweight, latesthight, latesttemp, latestScore, latestdiscr, latesttime = last
         latestworka.append({"latesttitle":latesttitle,"latestname":latestname,"latestweight":latestweight,"latesthight":latesthight,"latesttemp":latesttemp,"latestScore":latestScore,"latestdiscr":latestdiscr,"latesttime":latesttime})
 
-    alldatas = reading_alldatas_to_database()
+    alldatas = mysqlmanager.reading_alldatas_to_database()
     datas = []
     for data in alldatas:
         hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp = data
         datas.append({"hum":hum,"temp":temp,"motion":motion,"switch":switch,"redled":redled,"yellowled":yellowled,"light":light,"fans":fans,"servostatus":servostatus,"timestamp":timestamp})
 
 
-    latestdht = reading_latestdhtstatus_to_database()
+    latestdht = mysqlmanager.reading_latestdhtstatus_to_database()
     latestdhts =[]
     for dht in latestdht:
         hum, temp, timestamp = dht
@@ -254,7 +256,7 @@ def add():
         discr = request.form["discr"]
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        writing_writedatas_to_database(title, name, weight, hight, temp, Score, discr, timestamp)
+        mysqlmanager.writing_writedatas_to_database(title, name, weight, hight, temp, Score, discr, timestamp)
 
         flash('your information added seccussfully','info')
 
@@ -267,6 +269,7 @@ def add():
 @app.route('/login',methods=["GET", "POST"])
 @limiter.limit("10 per minute")
 def login():
+    #subprocess.Popen(["python", "collect.py"])
     '''this function return login page'''
     error = None
     if current_user.is_authenticated:
@@ -353,7 +356,7 @@ def four_point_transform(image, pts):
 
 def check(username,password):
     res = False
-    if username == "admin" and password == "admin":
+    if username == config.username and password == config.password:
         res = True
     return res               
 
@@ -439,14 +442,14 @@ def getalldatas():
     servostatus = respon.json()["servo"]
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-    writing_dhtstatus_to_database(hum, temp, timestamp)
-    writing_pirstatus_to_database(motion, timestamp)
-    writing_irstatus_to_database(switch, timestamp)
-    writing_ledstatus_to_database(redled, yellowled, timestamp)
-    writing_relaystatus_to_database(light, fans, timestamp)
-    writing_servostatus_to_database(servostatus, timestamp)
+    mysqlmanager.writing_dhtstatus_to_database(hum, temp, timestamp)
+    mysqlmanager.writing_pirstatus_to_database(motion, timestamp)
+    mysqlmanager.writing_irstatus_to_database(switch, timestamp)
+    mysqlmanager.writing_ledstatus_to_database(redled, yellowled, timestamp)
+    mysqlmanager.writing_relaystatus_to_database(light, fans, timestamp)
+    mysqlmanager.writing_servostatus_to_database(servostatus, timestamp)
 
-    writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp)
+    mysqlmanager.writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp)
 
     return hum, temp, motion, switch, redled, yellowled, light, fans, servostatus
 
@@ -460,7 +463,7 @@ def getroomstatus():
 
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    writing_dhtstatus_to_database(hum, temp, timestamp)
+    mysqlmanager.writing_dhtstatus_to_database(hum, temp, timestamp)
 
     return temp, hum
 
@@ -473,7 +476,7 @@ def getpirstatus():
     
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    writing_pirstatus_to_database(motion,timestamp)
+    mysqlmanager.writing_pirstatus_to_database(motion,timestamp)
 
     return motion
 
@@ -486,7 +489,7 @@ def getirstatus():
     
     timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     
-    writing_irstatus_to_database(switch,timestamp)
+    mysqlmanager.writing_irstatus_to_database(switch,timestamp)
 
     return switch
 
@@ -501,7 +504,7 @@ def ledcontrol(led,status):
         
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        writing_ledstatus_to_database(redled,yellowled,timestamp)
+        mysqlmanager.writing_ledstatus_to_database(redled,yellowled,timestamp)
         
         return redled, yellowled
     
@@ -520,7 +523,7 @@ def relaycontrol(relaypin, status):
         
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        writing_relaystatus_to_database(stuffs['light'],stuffs['fans'],timestamp)
+        mysqlmanager.writing_relaystatus_to_database(stuffs['light'],stuffs['fans'],timestamp)
 
         return stuffs
     else:
@@ -537,7 +540,7 @@ def servocontrol(servo, status):
         
         timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         
-        writing_servostatus_to_database(servostatus,timestamp)
+        mysqlmanager.writing_servostatus_to_database(servostatus,timestamp)
 
         return servostatus
     else:
@@ -600,204 +603,6 @@ def servocheck(servo, status):
         
     return ret
 
-def connect_to_database():
-    '''this function make connection to mysql service'''
-
-    db = mysql.connector.connect(
-        host="localhost",
-        user="nativeuserme",
-        passwd="password",
-        db="alldatas",
-        charset="utf8",
-        auth_plugin='mysql_native_password'
-    )
-
-    return db
-
-def reading_ledstatus_from_database():
-    '''this function read ledstatuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM ledstatus;")
-    db.close()
-    return cur.fetchall()
-
-def reading_relaystatus_from_database():
-    '''this function read relaystatuss from mysql database from  past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM relaystatus;")
-    db.close()
-    return cur.fetchall()
-
-def reading_servostatus_from_database():
-    '''this function read servostatus from mysql database from  past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM servostatus;")
-    db.close()
-    return cur.fetchall()
-
-def reading_pirstatus_from_database():
-    '''this function read pirstatuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM pirstatus;")
-    db.close()
-    return cur.fetchall()
-
-def reading_irstatus_from_database():
-    '''this function read irstatuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM irstatus;")
-    db.close()
-    return cur.fetchall()
-
-def reading_dhtstatus_from_database():
-    '''this function read dhtstatuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM dhtstatus;")
-    db.close()
-    return cur.fetchall()            
-
-def reading_alldatas_to_database():
-    '''this function read alldatas statuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM alldatasstatus;")
-    db.close()
-    return cur.fetchall() 
-
-def reading_alllatestdatas_to_database():
-    '''this function read alllatestdatas statuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM alldatasstatus ORDER BY timestamp DESC LIMIT 1;")
-    db.close()
-    return cur.fetchall() 
-
-def reading_writedatas_to_database():
-    '''this function read allwritedatas statuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM allwritedatasstatus;")
-    db.close()
-    return cur.fetchall()         
-
-def reading_latestwritedatas_to_database():
-    '''this function read alllatestwritedatas statuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM allwritedatasstatus ORDER BY time DESC LIMIT 1;")
-    db.close()
-    return cur.fetchall()
-
-def reading_latestdhtstatus_to_database():
-    '''this function read latestdhtstatus statuss from mysql database from past to today and return them'''
-
-    db = connect_to_database()
-    cur = db.cursor()
-    cur.execute("SELECT * FROM dhtstatus ORDER BY timestamp DESC LIMIT 1;")
-    db.close()
-    return cur.fetchall()
-
-def writing_ledstatus_to_database(redled, yellowled, timestamp):
-    '''this function write collected ledstatuss to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO ledstatus VALUES ("{redled}","{yellowled}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()
-
-def writing_relaystatus_to_database(light, fans, timestamp):
-    '''this function write collected relaystatuss to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO relaystatus VALUES ("{light}","{fans}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()
-
-def writing_servostatus_to_database(servostatus,timestamp):
-    '''this function write collected servostatus to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO servostatus VALUES ("{servostatus}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()    
-
-def writing_pirstatus_to_database(motion,timestamp):
-    '''this function write collected pirstatuss to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO pirstatus VALUES ("{motion}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()
-
-def writing_irstatus_to_database(switch,timestamp):
-    ''' this function write collected irstatuss to mysql databse with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO irstatus VALUES ("{switch}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()    
-
-def writing_dhtstatus_to_database(hum, temp, timestamp):
-    '''this function write collected dhtstatuss to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO dhtstatus VALUES ("{hum}","{temp}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()    
-
-def writing_alldatas_to_database(hum, temp, motion, switch, redled, yellowled, light, fans, servostatus, timestamp):
-    '''this function write all collected datas to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO alldatasstatus VALUES ("{hum}","{temp}","{motion}","{switch}","{redled}","{yellowled}","{light}","{fans}","{servostatus}","{timestamp}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()
-
-def writing_writedatas_to_database(title, name, weight, hight, temp, Score, discr, time):
-    '''this function write all collected datas to mysql database with timestamp'''
-
-    db = connect_to_database()    
-    cur = db.cursor()
-    qury = f'INSERT INTO allwritedatasstatus VALUES ("{title}","{name}","{weight}","{hight}","{temp}","{Score}","{discr}","{time}");'
-    cur.execute(qury)
-    db.commit()
-    db.close()
-
-def read_datas_every_S():
-    while True:
-        getalldatas()
-        time.sleep(1)
-
 # check to see if this is the main thread of execution
 if __name__ == '__main__':
     	
@@ -818,7 +623,7 @@ if __name__ == '__main__':
 	t.start()
 
 	# start the flask app  
-	app.run(host=args["ip"], port=args["port"], debug=True, threaded=True, use_reloader=False);
+	app.run(host=args["ip"], port=args["port"], debug=True, threaded=True, use_reloader=False)
 
 # release the video stream pointer
 vs.stop()
